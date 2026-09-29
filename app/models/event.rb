@@ -12,6 +12,8 @@ class Event < ApplicationRecord
   # bu alanların boş bırakılamayacağını uygulama seviyesinde zorunlu kıldık
   validates :capacity, numericality: { greater_than: 0 }
   # kapasite 0 olamaz
+  validate :event_date_not_in_past, if: :will_save_change_to_event_date?
+  # sadece tarih değişirken kontrol edilir; tarihi geçmiş etkinlik yine iptal edilebilir
 
   scope :upcoming, -> { where(cancelled: false).where("event_date >= ?", Time.current) }
 
@@ -46,4 +48,12 @@ class Event < ApplicationRecord
       )
     end
     end
+
+  private
+
+  def event_date_not_in_past
+    return if event_date.blank?
+
+    errors.add(:event_date, "can't be in the past") if event_date < Time.current
+  end
 end

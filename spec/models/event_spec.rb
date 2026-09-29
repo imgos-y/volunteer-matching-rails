@@ -32,4 +32,18 @@ RSpec.describe Event, type: :model do
     expect(event).not_to be_valid
   end
 
+  it "prevents creating an event with a past date" do
+    event = organizer.events.new(valid_event_attributes.merge(event_date: 1.day.ago))
+    expect(event).not_to be_valid
+    expect(event.errors[:event_date]).to include("can't be in the past")
+  end
+
+  it "still allows cancelling an event whose date has passed" do
+    event = organizer.events.create!(valid_event_attributes)
+    event.update_column(:event_date, 1.day.ago)
+
+    expect { event.cancel! }.not_to raise_error
+    expect(event.reload.cancelled).to be true
+  end
+
 end

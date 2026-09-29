@@ -3,10 +3,20 @@ class EventRegistration < ApplicationRecord
   belongs_to :volunteer
 
   STATUSES = %w[registered attended cancelled no_show].freeze
+  ACTIVE_STATUSES = %w[registered attended].freeze
+
+  # attended ve no_show son durumlardır; iptal edilen kayıt tekrar açılabilir
+  ALLOWED_TRANSITIONS = {
+    "registered" => %w[attended no_show cancelled],
+    "cancelled" => %w[registered]
+  }.freeze
 
   validates :status, inclusion: { in: STATUSES }
-  validate :not_already_actively_registered, on: :create
-  validate :capacity_not_exceeded, on: :create
+  validate :valid_status_transition, on: :update
+  # hem yeni kayıtta hem de iptal edilmiş kaydın tekrar açılmasında çalışır
+  validate :event_open_for_registration, if: :becoming_active?
+  validate :not_already_actively_registered, if: :becoming_active?
+  validate :capacity_not_exceeded, if: :becoming_active?
 
   after_create_commit :notify_organizer_of_registration
   after_create_commit :notify_organizer_if_full
@@ -14,18 +24,41 @@ class EventRegistration < ApplicationRecord
 
   private
 
+  def becoming_active?
+    status == "registered" && (new_record? || will_save_change_to_status?)
+  end
+
+  def valid_status_transition
+    return unless will_save_change_to_status?
+
+    from, to = status_in_database, status
+    return if ALLOWED_TRANSITIONS.fetch(from, []).include?(to)
+
+    errors.add(:status, "cannot change from #{from} to #{to}")
+  end
+
+  def event_open_for_registration
+    return unless event
+
+    if event.cancelled?
+      errors.add(:base, "event has been cancelled")
+    elsif event.event_date.present? && event.event_date < Time.current
+      errors.add(:base, "event has already taken place")
+    end
+  end
+
   def capacity_not_exceeded
     return unless event
 
-    errors.add(:base, "event is full") if event.full?
+    # kaydın kendisi sayıya dahil edilmez (tekrar kayıt durumunda)
+    taken = event.event_registrations.where(status: ACTIVE_STATUSES).where.not(id: id).count
+    errors.add(:base, "event is full") if taken >= event.capacity
   end
-
-
 
   def not_already_actively_registered
     return unless event && volunteer
 
-    existing = event.event_registrations.where(volunteer: volunteer, status: %w[registered attended])
+    existing = event.event_registrations.where(volunteer: volunteer, status: ACTIVE_STATUSES)
     existing = existing.where.not(id: id) if persisted?
 
     errors.add(:base, "already registered for this event") if existing.exists?

@@ -43,10 +43,39 @@ RSpec.describe EventRegistration, type: :model do
 
   it "allows re-registering after a previous cancellation" do
     event.update!(capacity: 5)
-    first = event.event_registrations.create!(volunteer: volunteer, status: "registered", registered_at: Time.current)
-    first.update!(status: "cancelled")
+    registration = event.event_registrations.create!(volunteer: volunteer, status: "registered", registered_at: Time.current)
+    registration.update!(status: "cancelled")
 
-    second = event.event_registrations.new(volunteer: volunteer, status: "registered", registered_at: Time.current)
-    expect(second).to be_valid
+    expect(registration.update(status: "registered")).to be true
+  end
+
+  it "prevents re-registering after cancellation when the event has filled up" do
+    registration = event.event_registrations.create!(volunteer: volunteer, status: "registered", registered_at: Time.current)
+    registration.update!(status: "cancelled")
+    other_volunteer = Volunteer.create!(email: "other@example.com", password: "123456", name: "Ali", surname: "Yılmaz", skill: "Cooking", interest: "Health")
+    event.event_registrations.create!(volunteer: other_volunteer, status: "registered", registered_at: Time.current)
+
+    expect(registration.update(status: "registered")).to be false
+    expect(registration.errors[:base]).to include("event is full")
+  end
+
+  it "prevents registering for a cancelled event" do
+    event.update!(cancelled: true)
+    registration = event.event_registrations.new(volunteer: volunteer, status: "registered", registered_at: Time.current)
+    expect(registration).not_to be_valid
+  end
+
+  it "prevents registering for a past event" do
+    event.update_column(:event_date, 1.day.ago)
+    registration = event.event_registrations.new(volunteer: volunteer, status: "registered", registered_at: Time.current)
+    expect(registration).not_to be_valid
+  end
+
+  it "does not allow an attended registration to change status again" do
+    registration = event.event_registrations.create!(volunteer: volunteer, status: "registered", registered_at: Time.current)
+    registration.update!(status: "attended")
+
+    expect(registration.update(status: "registered")).to be false
+    expect(registration.reload.update(status: "no_show")).to be false
   end
 end

@@ -1,0 +1,37 @@
+<div class="px-4 py-5 text-center">
+  <h1 class="display-4 fw-bold text-primary">Volunteer Match</h1>
+  <p class="lead text-muted col-lg-8 mx-auto">
+    Connecting volunteers with the events that matter to them — matched by skill and interest.
+  </p>
+
+  <% if volunteer_signed_in? %>
+    <%= link_to "View Events", events_path, class: "btn btn-primary btn-lg px-4" %>
+  <% elsif organizer_signed_in? %>
+    <%= link_to "Go to Dashboard", organizer_dashboard_path, class: "btn btn-primary btn-lg px-4" %>
+  <% else %>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <%= link_to "I'm a Volunteer", new_volunteer_session_path, class: "btn btn-primary btn-lg px-4" %>
+      <%= link_to "I'm an Organizer", new_organizer_session_path, class: "btn btn-outline-primary btn-lg px-4" %>
+    </div>
+  <% end %>
+</div>
+
+<hr class="my-5">
+
+<div class="row g-4 text-center">
+  <div class="col-md-4">
+    <div class="fs-1">🎯</div>
+    <h5>Smart Matching</h5>
+    <p class="text-muted">Events are ranked by how well they match your skills and interests.</p>
+  </div>
+  <div class="col-md-4">
+    <div class="fs-1">🏅</div>
+    <h5>Earn Badges</h5>
+    <p class="text-muted">Collect points for every confirmed attendance and unlock badges.</p>
+  </div>
+  <div class="col-md-4">
+    <div class="fs-1">🔔</div>
+    <h5>Stay Notified</h5>
+    <p class="text-muted">Get notified about registrations, cancellations, and capacity updates.</p>
+  </div>
+</div>

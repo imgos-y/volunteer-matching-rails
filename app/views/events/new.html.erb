@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title mb-4">Create Event</h2>
+
+        <%= form_for @event do |f| %>
+          <% if @event.errors.any? %>
+            <div class="alert alert-danger">
+              <h6><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h6>
+              <ul class="mb-0">
+                <% @event.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= f.label :name, class: "form-label" %>
+            <%= f.text_field :name, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :description, class: "form-label" %>
+            <%= f.text_area :description, class: "form-control", rows: 3 %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :event_date, class: "form-label" %>
+            <%= f.datetime_field :event_date, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :capacity, class: "form-label" %>
+            <%= f.number_field :capacity, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :skill_needed, class: "form-label" %>
+            <%= f.select :skill_needed, Volunteer::SKILLS, { prompt: "Select required skill" }, class: "form-select" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :interest_needed, class: "form-label" %>
+            <%= f.select :interest_needed, Volunteer::INTERESTS, { prompt: "Select required interest" }, class: "form-select" %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit "Create Event", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

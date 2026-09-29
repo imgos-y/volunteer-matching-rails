@@ -1,0 +1,75 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>My Dashboard</h1>
+  <%= link_to "Create New Event", new_event_path, class: "btn btn-primary" %>
+</div>
+
+<% if @events.empty? %>
+  <p class="text-muted">You haven't created any events yet.</p>
+<% else %>
+  <% @events.each do |event| %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <h4 class="card-title">
+            <%= event.name %>
+            <% if event.cancelled? %>
+              <span class="badge bg-danger">CANCELLED</span>
+            <% end %>
+          </h4>
+          <% unless event.cancelled? %>
+            <%= button_to "Cancel Event", cancel_event_path(event), method: :patch, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Are you sure you want to cancel this event?" } %>
+          <% end %>
+        </div>
+
+        <p class="text-muted small mb-2">📅 <%= event.event_date.strftime("%d.%m.%Y") %></p>
+
+        <div class="mb-3">
+          <div class="progress" style="height: 20px;">
+            <% percentage = event.capacity.zero? ? 0 : (event.active_registration_count.to_f / event.capacity * 100).round %>
+            <div class="progress-bar" role="progressbar" style="width: <%= percentage %>%;">
+              <%= event.active_registration_count %> / <%= event.capacity %>
+            </div>
+          </div>
+        </div>
+
+        <span class="badge bg-secondary"><%= event.skill_needed %></span>
+        <span class="badge bg-info text-dark"><%= event.interest_needed %></span>
+
+        <hr>
+
+        <h6>Registered Volunteers</h6>
+        <% registrations = event.event_registrations.where(status: %w[registered attended]) %>
+        <% if registrations.empty? %>
+          <p class="text-muted small">No volunteers registered yet.</p>
+        <% else %>
+          <table class="table table-sm">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% registrations.each do |registration| %>
+              <tr>
+                <td><%= registration.volunteer.name %> <%= registration.volunteer.surname %></td>
+                <td>
+                  <% badge_color = registration.status == "attended" ? "success" : "primary" %>
+                  <span class="badge bg-<%= badge_color %>"><%= registration.status.titleize %></span>
+                </td>
+                <td>
+                  <% if registration.status == "registered" %>
+                    <%= button_to "Confirm", confirm_attendance_path(event_id: event.id, id: registration.id), method: :patch, class: "btn btn-success btn-sm" %>
+                    <%= button_to "No-Show", mark_no_show_path(event_id: event.id, id: registration.id), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,41 @@
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title mb-4">Create Badge</h2>
+
+        <%= form_for @badge do |f| %>
+          <% if @badge.errors.any? %>
+            <div class="alert alert-danger">
+              <h6><%= pluralize(@badge.errors.count, "error") %> prohibited this badge from being saved:</h6>
+              <ul class="mb-0">
+                <% @badge.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= f.label :name, class: "form-label" %>
+            <%= f.text_field :name, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :required_points, class: "form-label" %>
+            <%= f.number_field :required_points, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :required_event, class: "form-label" %>
+            <%= f.number_field :required_event, class: "form-control" %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit "Create Badge", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

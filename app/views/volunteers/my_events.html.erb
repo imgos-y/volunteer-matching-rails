@@ -1,0 +1,43 @@
+<h1 class="mb-4">My Events</h1>
+
+<% if @registrations.empty? %>
+  <p class="text-muted">You haven't joined any events yet.</p>
+<% else %>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <% @registrations.each do |registration| %>
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title"><%= registration.event.name %></h5>
+            <p class="text-muted small">📅 <%= registration.event.event_date.strftime("%d.%m.%Y") %></p>
+
+            <% status_color = { "registered" => "primary", "attended" => "success", "cancelled" => "secondary", "no_show" => "danger" }[registration.status] %>
+            <span class="badge bg-<%= status_color %> mb-3"><%= registration.status.titleize %></span>
+
+            <% if registration.status == "registered" %>
+              <div>
+                <%= button_to "Cancel Registration", cancel_event_registration_path(event_id: registration.event.id), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            <% end %>
+
+            <% if registration.status == "attended" %>
+              <hr>
+              <h6>Leave Feedback</h6>
+              <%= form_for EventFeedback.new, url: event_event_feedbacks_path(registration.event) do |f| %>
+                <div class="mb-2">
+                  <%= f.label :rating, class: "form-label small" %>
+                  <%= f.select :rating, (1..5), {}, class: "form-select form-select-sm" %>
+                </div>
+                <div class="mb-2">
+                  <%= f.label :comment, class: "form-label small" %>
+                  <%= f.text_area :comment, class: "form-control form-control-sm", rows: 2 %>
+                </div>
+                <%= f.submit "Submit Feedback", class: "btn btn-primary btn-sm" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

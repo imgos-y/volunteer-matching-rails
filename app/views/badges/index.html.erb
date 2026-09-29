@@ -1,0 +1,23 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Badges</h1>
+  <%= link_to "Create New Badge", new_badge_path, class: "btn btn-primary" %>
+</div>
+
+<% if @badges.empty? %>
+  <p class="text-muted">No badges defined yet.</p>
+<% else %>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% @badges.each do |badge| %>
+      <div class="col">
+        <div class="card h-100 shadow-sm text-center">
+          <div class="card-body">
+            <div class="fs-1">🏅</div>
+            <h5 class="card-title"><%= badge.name %></h5>
+            <p class="card-text text-muted mb-0">Required points: <%= badge.required_points %></p>
+            <p class="card-text text-muted">Required events: <%= badge.required_event %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,22 @@
+<h1 class="mb-4">My Points</h1>
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm text-center">
+      <div class="card-body py-5">
+        <h4><%= @volunteer.name %> <%= @volunteer.surname %></h4>
+
+        <div class="display-4 fw-bold text-primary my-3"><%= @volunteer.points %></div>
+        <p class="text-muted">points</p>
+
+        <hr>
+
+        <% if @volunteer.badge %>
+          <span class="badge bg-warning text-dark fs-6 px-3 py-2">🏅 <%= @volunteer.badge.name %></span>
+        <% else %>
+          <p class="text-muted">No badge yet</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

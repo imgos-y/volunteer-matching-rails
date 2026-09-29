@@ -40,6 +40,17 @@ RSpec.describe "EventRegistrations", type: :request do
       expect(event.active_registration_count).to eq(1)
     end
 
+    it "tells a volunteer who is already registered instead of reporting success" do
+      sign_in volunteer
+      post event_event_registration_path(event)
+      registered_at = event.event_registrations.last.registered_at
+
+      post event_event_registration_path(event)
+
+      expect(flash[:alert]).to eq("You are already registered for this event.")
+      expect(event.event_registrations.last.registered_at).to eq(registered_at)
+    end
+
     it "does not let a volunteer join a cancelled event" do
       event.update!(cancelled: true)
       sign_in volunteer

@@ -5,6 +5,10 @@ class EventRegistrationsController < ApplicationController
   def create
     event = Event.find(params[:event_id])
     registration = event.event_registrations.find_or_initialize_by(volunteer: current_volunteer)
+    if registration.status == "registered"
+      return redirect_to events_path, alert: "You are already registered for this event."
+    end
+
     registration.status = "registered"
     registration.registered_at = Time.current
 

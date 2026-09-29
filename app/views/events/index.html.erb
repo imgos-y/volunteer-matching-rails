@@ -24,8 +24,13 @@
 
           <div class="mt-auto">
             <% if volunteer_signed_in? %>
-              <% if @registered_event_ids.include?(event.id) %>
+              <% status = @registration_statuses[event.id] %>
+              <% if status == "registered" %>
                 <%= button_to "Cancel Registration", cancel_event_registration_path(event_id: event.id), method: :delete, class: "btn btn-outline-danger w-100" %>
+              <% elsif status == "attended" %>
+                <button class="btn btn-success w-100" disabled>Attended</button>
+              <% elsif status == "no_show" %>
+                <button class="btn btn-outline-secondary w-100" disabled>Marked as No-Show</button>
               <% elsif event.full? %>
                 <button class="btn btn-secondary w-100" disabled>Event Full</button>
               <% else %>

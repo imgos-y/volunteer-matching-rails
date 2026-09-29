@@ -3,7 +3,8 @@ class EventsController < ApplicationController
 
   def index
     @events = volunteer_signed_in? ? Event.ordered_for_volunteer(current_volunteer) : Event.upcoming
-    @registered_event_ids = volunteer_signed_in? ? current_volunteer.event_registrations.where(status: "registered").pluck(:event_id) : []
+    # etkinlik id => kayıt durumu; butonu duruma göre seçmek için
+    @registration_statuses = volunteer_signed_in? ? current_volunteer.event_registrations.pluck(:event_id, :status).to_h : {}
   end
 
   def new

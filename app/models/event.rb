@@ -13,7 +13,7 @@ class Event < ApplicationRecord
   validates :capacity, numericality: { greater_than: 0 }
   # kapasite 0 olamaz
   validate :event_date_not_in_past, if: :will_save_change_to_event_date?
-  # sadece tarih değişirken kontrol edilir; tarihi geçmiş etkinlik yine iptal edilebilir
+  # sadece tarih değişirken kontrol edilir, tarihi geçmiş etkinlik yine iptal edilebilir
 
   scope :upcoming, -> { where(cancelled: false).where("event_date >= ?", Time.current) }
 
@@ -39,16 +39,22 @@ class Event < ApplicationRecord
   end
 
   def cancel!
-    update!(cancelled: true)
-    event_registrations.where(status: %w[registered attended]).each do |registration|
-      Notification.create!(
-        recipient: registration.volunteer,
-        message: "'#{name}' has been cancelled by the organizer",
-        notification_type: "event_cancelled"
-      )
-    end
-    end
+    return if cancelled?
 
+    transaction do
+      update!(cancelled: true)
+
+      event_registrations.where(status: "registered").includes(:volunteer).each do |registration|
+        Notification.create!(
+          recipient: registration.volunteer,
+          message: "'#{name}' has been cancelled by the organizer",
+          notification_type: "event_cancelled"
+        )
+      end
+
+      event_registrations.where(status: "registered").update_all(status: "cancelled", updated_at: Time.current)
+    end
+  end
   private
 
   def event_date_not_in_past

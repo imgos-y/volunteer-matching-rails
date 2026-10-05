@@ -16,6 +16,11 @@ RSpec.describe Event, type: :model do
     }
   end
 
+  let(:volunteer) do
+    Volunteer.create!(email: "vol@example.com", password: "123456", name: "Sarah",
+                      surname: "Volunteer", skill: "Cooking", interest: "Health")
+  end
+
 
   it "allows a Organizer can create  an event with valid attributes" do
     event = organizer.events.new(valid_event_attributes)

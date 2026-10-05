@@ -3,6 +3,7 @@ class EventFeedback < ApplicationRecord
   belongs_to :volunteer
 
   validates :rating, presence: true, inclusion: { in: 1..5 }
+  validates :volunteer_id, uniqueness: { scope: :event_id, message: "has already left feedback for this event" }
 
   after_create_commit :notify_organizer
 

@@ -22,6 +22,10 @@
 
             <% if registration.status == "attended" %>
               <hr>
+              <% if current_volunteer.event_feedbacks.exists?(event_id: registration.event.id) %>
+                <p class="text-success small mb-0">✓ Thank you, your feedback has been submitted.</p>
+              <% else %>
+
               <h6>Leave Feedback</h6>
               <%= form_for EventFeedback.new, url: event_event_feedbacks_path(registration.event) do |f| %>
                 <div class="mb-2">
@@ -34,6 +38,7 @@
                 </div>
                 <%= f.submit "Submit Feedback", class: "btn btn-primary btn-sm" %>
               <% end %>
+            <% end %>
             <% end %>
           </div>
         </div>

@@ -1,103 +1,98 @@
 puts "Seeding database..."
 
 # --- Badges ---
-bronze = Badge.create!(name: "Bronze Volunteer", required_points: 10, required_event: 1)
-silver = Badge.create!(name: "Silver Volunteer", required_points: 30, required_event: 3)
-gold = Badge.create!(name: "Gold Volunteer", required_points: 50, required_event: 5)
-
-puts "Created #{Badge.count} badges."
+Badge.find_or_create_by!(name: "Bronze Volunteer") do |b|
+  b.required_points = 10
+  b.required_event = 1
+end
+Badge.find_or_create_by!(name: "Silver Volunteer") do |b|
+  b.required_points = 30
+  b.required_event = 3
+end
+Badge.find_or_create_by!(name: "Gold Volunteer") do |b|
+  b.required_points = 50
+  b.required_event = 5
+end
 
 # --- Organizers ---
-tom = Organizer.create!(
-  email: "Tema@example.com",
-  password: "password123",
-  name: "Tom",
-  surname: "Manager"
-)
+tom = Organizer.find_or_create_by!(email: "john@example.com") do |o|
+  o.password = "password123"
+  o.name = "Tom"
+  o.surname = "Manager"
+end
 
-ayse = Organizer.create!(
-  email: "Dostluk@example.com",
-  password: "password123",
-  name: "Ayşe",
-  surname: "Kaya"
-)
-
-puts "Created #{Organizer.count} organizers."
+ayse = Organizer.find_or_create_by!(email: "dostluk@example.com") do |o|
+  o.password = "password123"
+  o.name = "Ayşe"
+  o.surname = "Kaya"
+end
 
 # --- Volunteers ---
-emir = Volunteer.create!(
-  email: "aksoy@example.com",
-  password: "password123",
-  name: "Emir",
-  surname: "Aksoy",
-  skill: "First Aid",
-  interest: "Health"
-)
+emir = Volunteer.find_or_create_by!(email: "aksoy@example.com") do |v|
+  v.password = "password123"
+  v.name = "Emir"
+  v.surname = "Aksoy"
+  v.skill = "First Aid"
+  v.interest = "Health"
+end
 
-imge = Volunteer.create!(
-  email: "imge@example.com",
-  password: "password123",
-  name: "Imge",
-  surname: "Yüksel",
-  skill: "Photography",
-  interest: "Arts"
-)
+imge = Volunteer.find_or_create_by!(email: "imge@example.com") do |v|
+  v.password = "password123"
+  v.name = "Imge"
+  v.surname = "Yüksel"
+  v.skill = "Photography"
+  v.interest = "Arts"
+end
 
-deniz = Volunteer.create!(
-  email: "deniz@example.com",
-  password: "password123",
-  name: "Deniz",
-  surname: "Koç",
-  skill: "Teaching",
-  interest: "Education"
-)
-
-puts "Created #{Volunteer.count} volunteers."
+deniz = Volunteer.find_or_create_by!(email: "deniz@example.com") do |v|
+  v.password = "password123"
+  v.name = "Deniz"
+  v.surname = "Koç"
+  v.skill = "Teaching"
+  v.interest = "Education"
+end
 
 # --- Events ---
-event1 = tom.events.create!(
-  name: "Community Health Day",
-  description: "A day of free health checkups and first aid awareness for the community.",
-  event_date: 1.week.from_now,
-  capacity: 5,
-  skill_needed: "First Aid",
-  interest_needed: "Health"
-)
+event1 = tom.events.find_or_create_by!(name: "Community Health Day") do |e|
+  e.description = "A day of free health checkups and first aid awareness for the community."
+  e.event_date = 1.week.from_now
+  e.capacity = 5
+  e.skill_needed = "First Aid"
+  e.interest_needed = "Health"
+end
 
-event2 = tom.events.create!(
-  name: "Photo Walk in Alsancak",
-  description: "Explore İzmir's streets and capture the city's culture through photography.",
-  event_date: 2.weeks.from_now,
-  capacity: 3,
-  skill_needed: "Photography",
-  interest_needed: "Arts"
-)
+event2 = tom.events.find_or_create_by!(name: "Photo Walk in Alsancak") do |e|
+  e.description = "Explore İzmir's streets and capture the city's culture through photography."
+  e.event_date = 2.weeks.from_now
+  e.capacity = 3
+  e.skill_needed = "Photography"
+  e.interest_needed = "Arts"
+end
 
-event3 = ayse.events.create!(
-  name: "After-School Tutoring",
-  description: "Help local children with their homework and learning.",
-  event_date: 10.days.from_now,
-  capacity: 4,
-  skill_needed: "Teaching",
-  interest_needed: "Education"
-)
+event3 = ayse.events.find_or_create_by!(name: "After-School Tutoring") do |e|
+  e.description = "Help local children with their homework and learning."
+  e.event_date = 10.days.from_now
+  e.capacity = 4
+  e.skill_needed = "Teaching"
+  e.interest_needed = "Education"
+end
 
-event4 = ayse.events.create!(
-  name: "Beach Cleanup",
-  description: "Join us to clean the İzmir coastline and protect marine life.",
-  event_date: 3.weeks.from_now,
-  capacity: 8,
-  skill_needed: "Organization",
-  interest_needed: "Environment"
-)
-
-puts "Created #{Event.count} events."
+ayse.events.find_or_create_by!(name: "Beach Cleanup") do |e|
+  e.description = "Join us to clean the İzmir coastline and protect marine life."
+  e.event_date = 3.weeks.from_now
+  e.capacity = 8
+  e.skill_needed = "Organization"
+  e.interest_needed = "Environment"
+end
 
 # --- Registrations ---
-emir.event_registrations.create!(event: event1, status: "registered", registered_at: Time.current)
-imge.event_registrations.create!(event: event2, status: "registered", registered_at: Time.current)
-deniz.event_registrations.create!(event: event3, status: "registered", registered_at: Time.current)
+[[emir, event1], [imge, event2], [deniz, event3]].each do |volunteer, event|
+  EventRegistration.find_or_create_by!(volunteer: volunteer, event: event) do |r|
+    r.status = "registered"
+    r.registered_at = Time.current
+  end
+end
 
-puts "Created #{EventRegistration.count} registrations."
-
+puts "Badges: #{Badge.count}, Organizers: #{Organizer.count}, Volunteers: #{Volunteer.count}, " \
+       "Events: #{Event.count}, Registrations: #{EventRegistration.count}"
 puts "Seeding complete!"

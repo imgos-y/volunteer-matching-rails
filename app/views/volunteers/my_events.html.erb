@@ -15,9 +15,13 @@
             <span class="badge bg-<%= status_color %> mb-3"><%= registration.status.titleize %></span>
 
             <% if registration.status == "registered" %>
-              <div>
-                <%= button_to "Cancel Registration", cancel_event_registration_path(event_id: registration.event.id), method: :delete, class: "btn btn-outline-danger btn-sm" %>
-              </div>
+              <% if registration.event.past? %>
+                <p class="text-muted small mb-0">Waiting for the organizer to confirm attendance.</p>
+              <% else %>
+                <div>
+                  <%= button_to "Cancel Registration", cancel_event_registration_path(event_id: registration.event.id), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+                </div>
+              <% end %>
             <% end %>
 
             <% if registration.status == "attended" %>

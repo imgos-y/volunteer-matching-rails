@@ -84,6 +84,9 @@ class EventRegistration < ApplicationRecord
 
   def notify_on_status_change
     case status
+    when "registered"
+      notify_organizer_of_registration
+      notify_organizer_if_full
     when "cancelled"
       Notification.create!(
         recipient: event.organizer,

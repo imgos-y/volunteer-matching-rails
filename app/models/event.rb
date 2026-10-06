@@ -6,11 +6,11 @@ class Event < ApplicationRecord
   has_many :event_feedbacks, dependent: :destroy
   # many to many ilişkisi
 
-  validates :name, :description, :event_date, :capacity, presence: true
-  validates :skill_needed, inclusion: { in: Volunteer::SKILLS }
-  validates :interest_needed, inclusion: { in: Volunteer::INTERESTS }
+  validates :name, :description, :event_date, :capacity, :skill_needed, :interest_needed, presence: true
+  validates :skill_needed, inclusion: { in: Volunteer::SKILLS }, allow_blank: true
+  validates :interest_needed, inclusion: { in: Volunteer::INTERESTS }, allow_blank: true
   # bu alanların boş bırakılamayacağını uygulama seviyesinde zorunlu kıldık
-  validates :capacity, numericality: { greater_than: 0 }
+  validates :capacity, numericality: { greater_than: 0 } , allow_blank: true
   # kapasite 0 olamaz
   validate :event_date_not_in_past, if: :will_save_change_to_event_date?
   # sadece tarih değişirken kontrol edilir, tarihi geçmiş etkinlik yine iptal edilebilir
@@ -23,6 +23,9 @@ class Event < ApplicationRecord
 
   def full?
     active_registration_count >= capacity
+  end
+  def past?
+    event_date < Time.current
   end
 
   def match_score_for(volunteer)

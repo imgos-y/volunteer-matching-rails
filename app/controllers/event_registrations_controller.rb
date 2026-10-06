@@ -23,12 +23,17 @@ class EventRegistrationsController < ApplicationController
   end
 
   def cancel
-    registration = current_volunteer.event_registrations.find_by(event_id: params[:event_id], status: "registered")
+    registration = current_volunteer.event_registrations.includes(:event)
+                                    .find_by(event_id: params[:event_id], status: "registered")
 
-    if registration&.update(status: "cancelled")
+    if registration.nil?
+      redirect_to events_path, alert: "You have no active registration for this event."
+    elsif registration.event.past?
+      redirect_to my_events_path, alert: "This event has already taken place, so the registration can no longer be cancelled."
+    elsif registration.update(status: "cancelled")
       redirect_to events_path, notice: "Registration cancelled."
     else
-      redirect_to events_path, alert: "You have no active registration for this event."
+      redirect_to events_path, alert: registration.errors.full_messages.to_sentence
     end
   end
 

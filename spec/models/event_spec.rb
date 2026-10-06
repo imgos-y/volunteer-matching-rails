@@ -51,4 +51,10 @@ RSpec.describe Event, type: :model do
     expect(event.reload.cancelled).to be true
   end
 
+  it "requires a skill and an interest" do
+    event = organizer.events.new(valid_event_attributes.merge(skill_needed: "", interest_needed: ""))
+    expect(event).not_to be_valid
+    expect(event.errors.full_messages).to include("Skill needed can't be blank", "Interest needed can't be blank")
+  end
+
 end

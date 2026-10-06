@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Event, type: :model do
   let(:organizer) do
-    Organizer.create!(email: "org@example.com", password: "123456", name: "John", surname: "Manager")
+    Organizer.create!(email: "org@example.com", password: "123456", name: "John")
   end
 
   let(:valid_event_attributes) do

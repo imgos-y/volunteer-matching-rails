@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Notification, type: :model do
 
   let(:organizer) do
-    Organizer.create!(email: "org@example.com", password: "123456", name: "John", surname: "Manager")
+    Organizer.create!(email: "org@example.com", password: "123456", name: "John")
   end
 
   it "default read to false" do

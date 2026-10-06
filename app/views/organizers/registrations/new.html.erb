@@ -8,14 +8,11 @@
           <%= render "devise/shared/error_messages", resource: resource %>
 
           <div class="mb-3">
-            <%= f.label :name, class: "form-label" %>
+            <%= f.label :name, "Organization name", class: "form-label" %>
             <%= f.text_field :name, class: "form-control" %>
           </div>
 
-          <div class="mb-3">
-            <%= f.label :surname, class: "form-label" %>
-            <%= f.text_field :surname, class: "form-control" %>
-          </div>
+
 
           <div class="mb-3">
             <%= f.label :email, class: "form-label" %>

@@ -17,14 +17,12 @@ end
 # --- Organizers ---
 tom = Organizer.find_or_create_by!(email: "john@example.com") do |o|
   o.password = "password123"
-  o.name = "Tom"
-  o.surname = "Manager"
+  o.name = "TEMA"
 end
 
 ayse = Organizer.find_or_create_by!(email: "dostluk@example.com") do |o|
   o.password = "password123"
-  o.name = "Ayşe"
-  o.surname = "Kaya"
+  o.name = "LOSEV"
 end
 
 # --- Volunteers ---

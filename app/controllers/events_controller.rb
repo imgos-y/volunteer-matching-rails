@@ -2,7 +2,14 @@ class EventsController < ApplicationController
   before_action :authenticate_organizer!, only: %i[new create cancel]
 
   def index
-    @events = volunteer_signed_in? ? Event.ordered_for_volunteer(current_volunteer) : Event.upcoming
+    @from = parse_date(params[:from])
+    @to = parse_date(params[:to])
+
+    events = Event.upcoming
+    events = events.where("event_date >= ?", @from.beginning_of_day) if @from
+    events = events.where("event_date <= ?", @to.end_of_day) if @to
+
+    @events = volunteer_signed_in? ? Event.ordered_for_volunteer(current_volunteer, events) : events.order(:event_date)
     # etkinlik id => kayıt durumu; butonu duruma göre seçmek için
     @registration_statuses = volunteer_signed_in? ? current_volunteer.event_registrations.pluck(:event_id, :status).to_h : {}
   end
@@ -15,7 +22,7 @@ class EventsController < ApplicationController
     @event = current_organizer.events.new(event_params)
 
     if @event.save
-      redirect_to events_path, notice: "Event created successfully."
+      redirect_to organizer_dashboard_path, notice: "Event created successfully."
     else
       render :new, status: :unprocessable_entity
     end
@@ -28,6 +35,12 @@ class EventsController < ApplicationController
   end
 
   private
+
+  def parse_date(value)
+    Date.iso8601(value) if value.present?
+  rescue ArgumentError
+    nil
+  end
 
   def event_params
     params.require(:event).permit(:name, :description, :event_date, :capacity, :skill_needed, :interest_needed)

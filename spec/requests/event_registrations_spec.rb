@@ -36,7 +36,7 @@ RSpec.describe "EventRegistrations", type: :request do
       sign_in volunteer
       post event_event_registration_path(event)
 
-      expect(flash[:alert]).to eq("event is full")
+      expect(flash[:alert]).to eq("Event is full")
       expect(event.active_registration_count).to eq(1)
     end
 
@@ -56,7 +56,7 @@ RSpec.describe "EventRegistrations", type: :request do
       sign_in volunteer
       post event_event_registration_path(event)
 
-      expect(flash[:alert]).to eq("event has been cancelled")
+      expect(flash[:alert]).to eq("Event has been cancelled")
       expect(event.event_registrations.count).to eq(0)
     end
   end

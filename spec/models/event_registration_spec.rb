@@ -56,7 +56,7 @@ RSpec.describe EventRegistration, type: :model do
     event.event_registrations.create!(volunteer: other_volunteer, status: "registered", registered_at: Time.current)
 
     expect(registration.update(status: "registered")).to be false
-    expect(registration.errors[:base]).to include("event is full")
+    expect(registration.errors[:base]).to include("Event is full")
   end
 
   it "prevents registering for a cancelled event" do

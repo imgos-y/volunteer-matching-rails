@@ -34,8 +34,8 @@ class Event < ApplicationRecord
     0
   end
 
-  def self.ordered_for_volunteer(volunteer)
-    upcoming.sort_by { |event| -event.match_score_for(volunteer) }
+  def self.ordered_for_volunteer(volunteer, relation = upcoming)
+    relation.sort_by { |event| -event.match_score_for(volunteer) }
   end
 
   def cancel!
@@ -47,7 +47,7 @@ class Event < ApplicationRecord
       event_registrations.where(status: "registered").includes(:volunteer).each do |registration|
         Notification.create!(
           recipient: registration.volunteer,
-          message: "'#{name}' has been cancelled by the organizer",
+          message: "'#{name}' Has been cancelled by the organizer",
           notification_type: "event_cancelled"
         )
       end

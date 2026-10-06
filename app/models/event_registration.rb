@@ -41,9 +41,9 @@ class EventRegistration < ApplicationRecord
     return unless event
 
     if event.cancelled?
-      errors.add(:base, "event has been cancelled")
+      errors.add(:base, "Event has been cancelled")
     elsif event.event_date.present? && event.event_date < Time.current
-      errors.add(:base, "event has already taken place")
+      errors.add(:base, "Event has already taken place")
     end
   end
 
@@ -52,7 +52,7 @@ class EventRegistration < ApplicationRecord
 
     # kaydın kendisi sayıya dahil edilmez (tekrar kayıt durumunda)
     taken = event.event_registrations.where(status: ACTIVE_STATUSES).where.not(id: id).count
-    errors.add(:base, "event is full") if taken >= event.capacity
+    errors.add(:base, "Event is full") if taken >= event.capacity
   end
 
   def not_already_actively_registered
@@ -61,7 +61,7 @@ class EventRegistration < ApplicationRecord
     existing = event.event_registrations.where(volunteer: volunteer, status: ACTIVE_STATUSES)
     existing = existing.where.not(id: id) if persisted?
 
-    errors.add(:base, "already registered for this event") if existing.exists?
+    errors.add(:base, "Already registered for this event") if existing.exists?
   end
 
   def notify_organizer_of_registration

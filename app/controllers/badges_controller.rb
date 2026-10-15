@@ -1,5 +1,5 @@
 class BadgesController < ApplicationController
-  before_action :authenticate_organizer!
+  before_action :require_organizer
 
   def index
     @badges = Badge.order(required_points: :asc)

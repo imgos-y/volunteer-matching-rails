@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Notification, type: :model do
-
   let(:organizer) do
     Organizer.create!(email: "org@example.com", password: "123456", name: "John")
   end
@@ -22,5 +21,4 @@ RSpec.describe Notification, type: :model do
       expect(result).not_to include(read_notification)
     end
   end
-
 end

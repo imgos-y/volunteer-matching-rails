@@ -1,5 +1,5 @@
 class VolunteersController < ApplicationController
-  before_action :authenticate_volunteer!
+  before_action :require_volunteer
 
   def profile
     @volunteer = current_volunteer

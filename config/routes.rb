@@ -1,18 +1,20 @@
 Rails.application.routes.draw do
-  resources :events, only: [:index, :new, :create] do
+  resource :session, only: :destroy
+  resources :passwords, param: :token
+  resources :events, only: [ :index, :new, :create ] do
     member do
       patch :cancel
     end
 
-    resource :event_registration, only: [:create], controller: "event_registrations"
-    resources :event_feedbacks, only: [:create]
+    resource :event_registration, only: [ :create ], controller: "event_registrations"
+    resources :event_feedbacks, only: [ :create ]
   end
 
-  resources :notifications, only: [:index] do
+  resources :notifications, only: [ :index ] do
     member { patch :mark_as_read }
   end
 
-  resources :badges, only: [:index, :new, :create]
+  resources :badges, only: [ :index, :new, :create ]
 
   delete "events/:event_id/registration", to: "event_registrations#cancel", as: :cancel_event_registration
   patch "events/:event_id/registrations/:id/confirm_attendance", to: "event_registrations#confirm_attendance", as: :confirm_attendance
@@ -28,9 +30,16 @@ Rails.application.routes.draw do
   get "organizer/dashboard", to: "organizers#dashboard", as: :organizer_dashboard
   get "organizer/feedbacks", to: "organizers#feedbacks", as: :organizer_feedbacks
   get "home/index"
-  devise_for :organizers, controllers: { registrations: "organizers/registrations" }
-  devise_for :volunteers, controllers: { registrations: "volunteers/registrations" }
-  # devise gemi otomatik ekledi bunları.
+
+  namespace :volunteers do
+    resource :session, only: %i[new create]
+    resource :registration, only: %i[new create edit update]
+  end
+
+  namespace :organizers do
+    resource :session, only: %i[ new create ]
+    resource :registration, only: %i[ new create edit update ]
+  end
 
 
   get "up" => "rails/health#show", as: :rails_health_check

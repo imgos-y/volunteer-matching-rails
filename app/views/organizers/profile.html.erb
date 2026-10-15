@@ -6,12 +6,12 @@
       <div class="card-body">
         <div class="mb-3">
           <small class="text-muted d-block">Name</small>
-          <span class="fs-5"><%= @organizer.name %> <%= @organizer.name %></span>
+          <span class="fs-5"><%= @organizer.name %></span>
         </div>
 
         <div class="mb-3">
           <small class="text-muted d-block">Email</small>
-          <span class="fs-5"><%= @organizer.email %></span>
+          <span class="fs-5"><%= @organizer.email_address %></span>
         </div>
 
         <div class="mb-3">
@@ -21,7 +21,7 @@
 
         <hr>
 
-        <%= link_to "Edit Profile", edit_organizer_registration_path, class: "btn btn-outline-primary btn-sm" %>
+        <%= link_to "Edit Profile", edit_organizers_registration_path, class: "btn btn-outline-primary btn-sm" %>
         <%= link_to "Go to Dashboard", organizer_dashboard_path, class: "btn btn-outline-primary btn-sm" %>
       </div>
     </div>

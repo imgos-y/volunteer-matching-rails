@@ -14,41 +14,23 @@ Badge.find_or_create_by!(name: "Gold Volunteer") do |b|
   b.required_event = 5
 end
 
-# --- Organizers ---
-tom = Organizer.find_or_create_by!(email: "john@example.com") do |o|
-  o.password = "password123"
-  o.name = "TEMA"
+# Hesap varsa onun profilini döndürür, yoksa profil + kullanıcıyı birlikte oluşturur
+def seed_account(profile_class, email, **profile_attributes)
+  User.find_by(email_address: email)&.userable ||
+    profile_class.create!(**profile_attributes, user_attributes: { email_address: email, password: "password123" })
 end
 
-ayse = Organizer.find_or_create_by!(email: "dostluk@example.com") do |o|
-  o.password = "password123"
-  o.name = "LOSEV"
-end
+# --- Organizers ---
+tom = seed_account(Organizer, "john@example.com", name: "TEMA")
+ayse = seed_account(Organizer, "dostluk@example.com", name: "LOSEV")
 
 # --- Volunteers ---
-emir = Volunteer.find_or_create_by!(email: "aksoy@example.com") do |v|
-  v.password = "password123"
-  v.name = "Emir"
-  v.surname = "Aksoy"
-  v.skill = "First Aid"
-  v.interest = "Health"
-end
-
-imge = Volunteer.find_or_create_by!(email: "imge@example.com") do |v|
-  v.password = "password123"
-  v.name = "Imge"
-  v.surname = "Yüksel"
-  v.skill = "Photography"
-  v.interest = "Arts"
-end
-
-deniz = Volunteer.find_or_create_by!(email: "deniz@example.com") do |v|
-  v.password = "password123"
-  v.name = "Deniz"
-  v.surname = "Koç"
-  v.skill = "Teaching"
-  v.interest = "Education"
-end
+emir = seed_account(Volunteer, "aksoy@example.com",
+                    name: "Emir", surname: "Aksoy", skill: "First Aid", interest: "Health")
+imge = seed_account(Volunteer, "imge@example.com",
+                    name: "Imge", surname: "Yüksel", skill: "Photography", interest: "Arts")
+deniz = seed_account(Volunteer, "deniz@example.com",
+                     name: "Deniz", surname: "Koç", skill: "Teaching", interest: "Education")
 
 # --- Events ---
 event1 = tom.events.find_or_create_by!(name: "Community Health Day") do |e|
@@ -84,13 +66,13 @@ ayse.events.find_or_create_by!(name: "Beach Cleanup") do |e|
 end
 
 # --- Registrations ---
-[[emir, event1], [imge, event2], [deniz, event3]].each do |volunteer, event|
+[ [ emir, event1 ], [ imge, event2 ], [ deniz, event3 ] ].each do |volunteer, event|
   EventRegistration.find_or_create_by!(volunteer: volunteer, event: event) do |r|
     r.status = "registered"
     r.registered_at = Time.current
   end
 end
 
-puts "Badges: #{Badge.count}, Organizers: #{Organizer.count}, Volunteers: #{Volunteer.count}, " \
+puts "Badges: #{Badge.count}, Users: #{User.count}, Organizers: #{Organizer.count}, Volunteers: #{Volunteer.count}, " \
        "Events: #{Event.count}, Registrations: #{EventRegistration.count}"
 puts "Seeding complete!"

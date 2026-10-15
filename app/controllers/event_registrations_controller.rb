@@ -1,6 +1,6 @@
 class EventRegistrationsController < ApplicationController
-  before_action :authenticate_volunteer!, only: %i[create cancel]
-  before_action :authenticate_organizer!, only: %i[confirm_attendance mark_no_show]
+  before_action :require_volunteer, only: %i[create cancel]
+  before_action :require_organizer, only: %i[confirm_attendance mark_no_show]
 
   def create
     event = Event.find(params[:event_id])

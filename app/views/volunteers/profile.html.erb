@@ -11,7 +11,7 @@
 
         <div class="mb-3">
           <small class="text-muted d-block">Email</small>
-          <span class="fs-5"><%= @volunteer.email %></span>
+          <span class="fs-5"><%= @volunteer.email_address %></span>
         </div>
 
         <div class="mb-3">
@@ -26,7 +26,7 @@
 
         <hr>
 
-        <%= link_to "Edit Profile", edit_volunteer_registration_path, class: "btn btn-outline-primary btn-sm" %>
+        <%= link_to "Edit Profile", edit_volunteers_registration_path, class: "btn btn-outline-primary btn-sm" %>
         <%= link_to "My Points", volunteer_points_path, class: "btn btn-outline-primary btn-sm" %>
       </div>
     </div>

@@ -9,8 +9,7 @@ class Volunteer < ApplicationRecord
     "Sports", "Health", "Technology", "Culture", "Arts"
   ].freeze
 
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  include Userable
 
   belongs_to :badge, optional: true
 
@@ -29,7 +28,7 @@ class Volunteer < ApplicationRecord
   end
 
   def deduct_points(amount)
-    new_points = [points - amount, 0].max
+    new_points = [ points - amount, 0 ].max
     update!(points: new_points)
   end
 
@@ -39,7 +38,4 @@ class Volunteer < ApplicationRecord
     eligible = Badge.where("required_points <= ?", points).order(required_points: :desc).first
     update(badge: eligible) if eligible && eligible != badge
   end
-
-
-
 end

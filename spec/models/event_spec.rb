@@ -56,5 +56,4 @@ RSpec.describe Event, type: :model do
     expect(event).not_to be_valid
     expect(event.errors.full_messages).to include("Skill needed can't be blank", "Interest needed can't be blank")
   end
-
 end

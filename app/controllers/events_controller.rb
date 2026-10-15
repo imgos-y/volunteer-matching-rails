@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
-  before_action :authenticate_organizer!, only: %i[new create cancel]
+  allow_unauthenticated_access only: :index
+  before_action :require_organizer, only: %i[new create cancel]
 
   def index
     @from = parse_date(params[:from])
@@ -9,9 +10,9 @@ class EventsController < ApplicationController
     events = events.where("event_date >= ?", @from.beginning_of_day) if @from
     events = events.where("event_date <= ?", @to.end_of_day) if @to
 
-    @events = volunteer_signed_in? ? Event.ordered_for_volunteer(current_volunteer, events) : events.order(:event_date)
+    @events = current_volunteer ? Event.ordered_for_volunteer(current_volunteer, events) : events.order(:event_date)
     # etkinlik id => kayıt durumu; butonu duruma göre seçmek için
-    @registration_statuses = volunteer_signed_in? ? current_volunteer.event_registrations.pluck(:event_id, :status).to_h : {}
+    @registration_statuses = current_volunteer ? current_volunteer.event_registrations.pluck(:event_id, :status).to_h : {}
   end
 
   def new

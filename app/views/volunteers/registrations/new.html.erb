@@ -4,12 +4,12 @@
       <div class="card-body">
         <h2 class="card-title mb-4">Volunteer Sign Up</h2>
 
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-          <%= render "devise/shared/error_messages", resource: resource %>
+        <%= form_with model: @volunteer, url: volunteers_registration_path do |f| %>
+          <%= render "shared/form_errors", record: @volunteer %>
 
           <div class="mb-3">
             <%= f.label :name, class: "form-label" %>
-            <%= f.text_field :name, class: "form-control" %>
+            <%= f.text_field :name, autofocus: true, class: "form-control" %>
           </div>
 
           <div class="mb-3">
@@ -27,23 +27,22 @@
             <%= f.select :interest, Volunteer::INTERESTS, { prompt: "Select an interest" }, class: "form-select" %>
           </div>
 
-          <div class="mb-3">
-            <%= f.label :email, class: "form-label" %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
-          </div>
+          <%= f.fields_for :user do |uf| %>
+            <div class="mb-3">
+              <%= uf.label :email_address, "Email", class: "form-label" %>
+              <%= uf.email_field :email_address, autocomplete: "email", class: "form-control" %>
+            </div>
 
-          <div class="mb-3">
-            <%= f.label :password, class: "form-label" %>
-            <% if @minimum_password_length %>
-              <small class="text-muted d-block mb-1">(<%= @minimum_password_length %> characters minimum)</small>
-            <% end %>
-            <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
-          </div>
+            <div class="mb-3">
+              <%= uf.label :password, class: "form-label" %>
+              <%= uf.password_field :password, autocomplete: "new-password", maxlength: 72, class: "form-control" %>
+            </div>
 
-          <div class="mb-3">
-            <%= f.label :password_confirmation, class: "form-label" %>
-            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
-          </div>
+            <div class="mb-3">
+              <%= uf.label :password_confirmation, class: "form-label" %>
+              <%= uf.password_field :password_confirmation, autocomplete: "new-password", maxlength: 72, class: "form-control" %>
+            </div>
+          <% end %>
 
           <div class="d-grid">
             <%= f.submit "Sign up", class: "btn btn-primary" %>
@@ -51,9 +50,11 @@
         <% end %>
 
         <div class="mt-3">
-          <%= render "devise/shared/links" %>
+          <%= link_to "Already have an account? Log in", new_volunteers_session_path %>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+

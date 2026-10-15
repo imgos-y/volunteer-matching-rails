@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Badge, type: :model do
   let(:valid_badge_attributes) do
-    { name: "Bronze" , required_points: 10 }
+    { name: "Bronze", required_points: 10 }
   end
 
   it " is valid attributes" do

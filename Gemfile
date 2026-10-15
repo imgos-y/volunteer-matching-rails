@@ -18,7 +18,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -65,8 +65,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "devise"
-# different user type, log-in/out, secure used by this gem dual platform destekler
+
 
 group :development, :test do
   gem "rspec-rails"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_06_120253) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_15_185724) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -72,34 +72,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_06_120253) do
 
   create_table "organizers", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
     t.string "name"
-    t.datetime "remember_created_at"
-    t.datetime "reset_password_sent_at"
-    t.string "reset_password_token"
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_organizers_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_organizers_on_reset_password_token", unique: true
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "userable_id", null: false
+    t.string "userable_type", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["userable_type", "userable_id"], name: "index_users_on_userable", unique: true
   end
 
   create_table "volunteers", force: :cascade do |t|
     t.bigint "badge_id"
     t.datetime "created_at", null: false
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
     t.string "interest"
     t.string "name"
     t.integer "points", default: 0
-    t.datetime "remember_created_at"
-    t.datetime "reset_password_sent_at"
-    t.string "reset_password_token"
     t.string "skill"
     t.string "surname"
     t.datetime "updated_at", null: false
     t.index ["badge_id"], name: "index_volunteers_on_badge_id"
-    t.index ["email"], name: "index_volunteers_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_volunteers_on_reset_password_token", unique: true
   end
 
   add_foreign_key "event_feedbacks", "events"
@@ -107,5 +113,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_06_120253) do
   add_foreign_key "event_registrations", "events"
   add_foreign_key "event_registrations", "volunteers"
   add_foreign_key "events", "organizers"
+  add_foreign_key "sessions", "users"
   add_foreign_key "volunteers", "badges"
 end

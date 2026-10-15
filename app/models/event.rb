@@ -10,7 +10,7 @@ class Event < ApplicationRecord
   validates :skill_needed, inclusion: { in: Volunteer::SKILLS }, allow_blank: true
   validates :interest_needed, inclusion: { in: Volunteer::INTERESTS }, allow_blank: true
   # bu alanların boş bırakılamayacağını uygulama seviyesinde zorunlu kıldık
-  validates :capacity, numericality: { greater_than: 0 } , allow_blank: true
+  validates :capacity, numericality: { greater_than: 0 }, allow_blank: true
   # kapasite 0 olamaz
   validate :event_date_not_in_past, if: :will_save_change_to_event_date?
   # sadece tarih değişirken kontrol edilir, tarihi geçmiş etkinlik yine iptal edilebilir

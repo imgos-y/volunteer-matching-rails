@@ -1,5 +1,5 @@
 class EventFeedbacksController < ApplicationController
-  before_action :authenticate_volunteer!
+  before_action :require_volunteer
 
   def create
     registration = current_volunteer.event_registrations.find_by!(event_id: params[:event_id], status: "attended")

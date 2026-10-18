@@ -1,7 +1,7 @@
 require "test_helper"
 
 class PasswordsControllerTest < ActionDispatch::IntegrationTest
-  setup { @user = User.take }
+  setup { @user = users(:emir) }
 
   test "new" do
     get new_password_path
@@ -11,7 +11,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   test "create" do
     post passwords_path, params: { email_address: @user.email_address }
     assert_enqueued_email_with PasswordsMailer, :reset, args: [ @user ]
-    assert_redirected_to new_session_path
+    assert_redirected_to root_path
 
     follow_redirect!
     assert_notice "reset instructions sent"
@@ -20,7 +20,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   test "create for an unknown user redirects but sends no mail" do
     post passwords_path, params: { email_address: "missing-user@example.com" }
     assert_enqueued_emails 0
-    assert_redirected_to new_session_path
+    assert_redirected_to root_path
 
     follow_redirect!
     assert_notice "reset instructions sent"
@@ -42,11 +42,19 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   test "update" do
     assert_changes -> { @user.reload.password_digest } do
       put password_path(@user.password_reset_token), params: { password: "new", password_confirmation: "new" }
-      assert_redirected_to new_session_path
+      assert_redirected_to new_volunteers_session_path
     end
 
     follow_redirect!
     assert_notice "Password has been reset"
+  end
+
+  test "update for an organizer redirects to the organizer sign in" do
+    organizer = users(:tema)
+
+    put password_path(organizer.password_reset_token), params: { password: "new", password_confirmation: "new"}
+
+    assert_redirected_to new_organizers_session_path
   end
 
   test "update with non matching passwords" do

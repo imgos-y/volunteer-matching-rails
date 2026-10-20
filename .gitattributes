@@ -1,3 +1,4 @@
+* text=auto eol=lf
 # See https://git-scm.com/docs/gitattributes for more about git attribute files.
 
 # Mark the database schema as having been generated.

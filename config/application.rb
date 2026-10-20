@@ -21,14 +21,6 @@ module VolunteerMatching
         config.load_defaults 8.1
 
         config.autoload_lib(ignore: %w[assets tasks])
-
-        config.generators do |g|
-          g.test_framework :rspec,
-                           fixtures: true,
-                           view_specs: false,
-                           helper_specs: false,
-                           routing_specs: false
-        end
       end
     end
 

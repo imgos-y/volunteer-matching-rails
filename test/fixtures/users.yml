@@ -9,3 +9,13 @@ tema:
   email_address: tema@example.com
   password_digest: <%= password_digest %>
   userable: tema (Organizer)
+
+losev:
+  email_address: losev@example.com
+  password_digest: <%= password_digest %>
+  userable: losev (Organizer)
+
+imge:
+  email_address: imge@example.com
+  password_digest: <%= password_digest %>
+  userable: imge (Volunteer)

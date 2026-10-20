@@ -4,3 +4,10 @@ emir:
   skill: First Aid
   interest: Environment
   points: 0
+
+imge:
+  name: İmge
+  surname: Yüksel
+  skill: Cooking
+  interest: Health
+  points: 0

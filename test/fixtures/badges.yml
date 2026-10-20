@@ -1,0 +1,12 @@
+bronze:
+  name: Bronze
+  required_points: 10
+
+silver:
+  name: Silver
+  required_points: 50
+
+gold:
+  name: Gold
+  required_points: 100
+

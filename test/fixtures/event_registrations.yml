@@ -1,0 +1,7 @@
+emir_cleanup:
+  event: cleanup
+  volunteer: emir
+  status: registered
+  registered_at: <%= 1.day.ago %>
+
+

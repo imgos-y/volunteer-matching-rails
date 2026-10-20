@@ -52,7 +52,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   test "update for an organizer redirects to the organizer sign in" do
     organizer = users(:tema)
 
-    put password_path(organizer.password_reset_token), params: { password: "new", password_confirmation: "new"}
+    put password_path(organizer.password_reset_token), params: { password: "new", password_confirmation: "new" }
 
     assert_redirected_to new_organizers_session_path
   end

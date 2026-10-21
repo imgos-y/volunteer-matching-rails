@@ -14,7 +14,7 @@
 
     .panel__title {
         margin: 0 0 var(--space-4);
-        font-size: var(--text-xl);
+        font-size: var(--text-lg);
     }
 
     .panel__footer {
@@ -22,10 +22,6 @@
         gap: var(--space-1);
         margin-top: var(--space-4);
         font-size: var(--text-sm);
-    }
-
-    .panel__footer a {
-        color: var(--color-primary);
     }
 
     .panel__actions {

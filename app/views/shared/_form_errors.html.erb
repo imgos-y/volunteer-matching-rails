@@ -1,6 +1,6 @@
 <% if record.errors.any? %>
-  <div class="alert alert-danger">
-    <ul class="mb-0">
+  <div class="flash flash--alert" role="alert">
+    <ul class="flash__list">
       <% record.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>

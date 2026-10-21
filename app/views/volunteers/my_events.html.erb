@@ -1,52 +1,52 @@
-<h1 class="mb-4">My Events</h1>
+<h1>My Events</h1>
 
 <% if @registrations.empty? %>
-  <p class="text-muted">You haven't joined any events yet.</p>
+  <p class="empty-state">
+    You haven't joined any events yet. <%= link_to "Browse events", events_path %>
+  </p>
 <% else %>
-  <div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="card-grid">
     <% @registrations.each do |registration| %>
-      <div class="col">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title"><%= registration.event.name %></h5>
-            <p class="text-muted small">📅 <%= registration.event.event_date.strftime("%d.%m.%Y") %></p>
+      <article class="panel event-card">
+        <h2 class="event-card__title"><%= registration.event.name %></h2>
+        <p class="event-card__meta"><%= registration.event.event_date.strftime("%d.%m.%Y") %></p>
 
-            <% status_color = { "registered" => "primary", "attended" => "success", "cancelled" => "secondary", "no_show" => "danger" }[registration.status] %>
-            <span class="badge bg-<%= status_color %> mb-3"><%= registration.status.titleize %></span>
-
-            <% if registration.status == "registered" %>
-              <% if registration.event.past? %>
-                <p class="text-muted small mb-0">Waiting for the organizer to confirm attendance.</p>
-              <% else %>
-                <div>
-                  <%= button_to "Cancel Registration", cancel_event_registration_path(event_id: registration.event.id), method: :delete, class: "btn btn-outline-danger btn-sm" %>
-                </div>
-              <% end %>
-            <% end %>
-
-            <% if registration.status == "attended" %>
-              <hr>
-              <% if current_volunteer.event_feedbacks.exists?(event_id: registration.event.id) %>
-                <p class="text-success small mb-0">✓ Thank you, your feedback has been submitted.</p>
-              <% else %>
-
-              <h6>Leave Feedback</h6>
-              <%= form_for EventFeedback.new, url: event_event_feedbacks_path(registration.event) do |f| %>
-                <div class="mb-2">
-                  <%= f.label :rating, class: "form-label small" %>
-                  <%= f.select :rating, (1..5), {}, class: "form-select form-select-sm" %>
-                </div>
-                <div class="mb-2">
-                  <%= f.label :comment, class: "form-label small" %>
-                  <%= f.text_area :comment, class: "form-control form-control-sm", rows: 2 %>
-                </div>
-                <%= f.submit "Submit Feedback", class: "btn btn-primary btn-sm" %>
-              <% end %>
-            <% end %>
-            <% end %>
-          </div>
+        <div class="event-card__tags">
+          <%= registration_status_tag(registration) %>
         </div>
-      </div>
+
+        <% if registration.status == "registered" %>
+          <% if registration.event.past? %>
+            <p class="event-card__meta">Waiting for the organizer to confirm attendance.</p>
+          <% else %>
+            <div class="event-card__actions">
+              <%= button_to "Cancel Registration", cancel_event_registration_path(event_id: registration.event.id), method: :delete, class: "button button--danger button--block" %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% if registration.status == "attended" %>
+          <% if current_volunteer.event_feedbacks.exists?(event_id: registration.event.id) %>
+            <p class="event-card__note">Thank you, your feedback has been submitted.</p>
+          <% else %>
+            <h3 class="form-section">Leave Feedback</h3>
+
+            <%= form_for EventFeedback.new, url: event_event_feedbacks_path(registration.event) do |f| %>
+              <div class="field">
+                <%= f.label :rating %>
+                <%= f.select :rating, (1..5), {}, class: "input" %>
+              </div>
+
+              <div class="field">
+                <%= f.label :comment %>
+                <%= f.text_area :comment, rows: 2, class: "input" %>
+              </div>
+
+              <%= f.submit "Submit Feedback", class: "button button--block" %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </article>
     <% end %>
   </div>
 <% end %>

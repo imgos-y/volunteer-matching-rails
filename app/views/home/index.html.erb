@@ -1,37 +1,34 @@
-<div class="px-4 py-5 text-center">
-  <h1 class="display-4 fw-bold text-primary">Volunteer Match</h1>
-  <p class="lead text-muted col-lg-8 mx-auto">
+<section class="hero">
+  <h1 class="hero__title">Volunteer Match</h1>
+  <p class="hero__lead">
     Connecting volunteers with the events that matter to them — matched by skill and interest.
   </p>
 
-  <% if current_volunteer %>
-    <%= link_to "View Events", events_path, class: "btn btn-primary btn-lg px-4" %>
-  <% elsif current_organizer %>
-    <%= link_to "Go to Dashboard", organizer_dashboard_path, class: "btn btn-primary btn-lg px-4" %>
-  <% else %>
-    <div class="d-flex gap-3 justify-content-center flex-wrap">
-      <%= link_to "I'm a Volunteer", new_volunteers_session_path, class: "btn btn-primary btn-lg px-4" %>
-      <%= link_to "I'm an Organizer", new_organizers_session_path, class: "btn btn-outline-primary btn-lg px-4" %>
-    </div>
-  <% end %>
-</div>
+  <div class="hero__actions">
+    <% if current_volunteer %>
+      <%= link_to "View Events", events_path, class: "button button--large" %>
+    <% elsif current_organizer %>
+      <%= link_to "Go to Dashboard", organizer_dashboard_path, class: "button button--large" %>
+    <% else %>
+      <%= link_to "I'm a Volunteer", new_volunteers_session_path, class: "button button--large" %>
+      <%= link_to "I'm an Organizer", new_organizers_session_path, class: "button button--secondary button--large" %>
+    <% end %>
+  </div>
+</section>
 
-<hr class="my-5">
+<section class="feature-grid">
+  <article class="feature">
+    <h2 class="feature__title">Smart Matching</h2>
+    <p class="feature__text">Events are ranked by how well they match your skills and interests.</p>
+  </article>
 
-<div class="row g-4 text-center">
-  <div class="col-md-4">
-    <div class="fs-1">🎯</div>
-    <h5>Smart Matching</h5>
-    <p class="text-muted">Events are ranked by how well they match your skills and interests.</p>
-  </div>
-  <div class="col-md-4">
-    <div class="fs-1">🏅</div>
-    <h5>Earn Badges</h5>
-    <p class="text-muted">Collect points for every confirmed attendance and unlock badges.</p>
-  </div>
-  <div class="col-md-4">
-    <div class="fs-1">🔔</div>
-    <h5>Stay Notified</h5>
-    <p class="text-muted">Get notified about registrations, cancellations, and capacity updates.</p>
-  </div>
-</div>
+  <article class="feature">
+    <h2 class="feature__title">Earn Badges</h2>
+    <p class="feature__text">Collect points for every confirmed attendance and unlock badges.</p>
+  </article>
+
+  <article class="feature">
+    <h2 class="feature__title">Stay Notified</h2>
+    <p class="feature__text">Get notified about registrations, cancellations, and capacity updates.</p>
+  </article>
+</section>

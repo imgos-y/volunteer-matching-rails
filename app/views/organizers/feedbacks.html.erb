@@ -1,18 +1,21 @@
-<h1 class="mb-4">Event Feedbacks</h1>
+<h1>Event Feedbacks</h1>
 
 <% if @feedbacks.empty? %>
-  <p class="text-muted">No feedback yet.</p>
+  <p class="empty-state">No feedback yet.</p>
 <% else %>
-  <% @feedbacks.each do |feedback| %>
-    <div class="card shadow-sm mb-3">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h6 class="mb-0"><%= feedback.event.name %></h6>
-          <span class="text-warning"><%= "⭐" * feedback.rating %><span class="text-muted"><%= "☆" * (5 - feedback.rating) %></span></span>
-        </div>
-        <p class="text-muted small mb-1">By <%= feedback.volunteer.name %> <%= feedback.volunteer.surname %> — <%= feedback.created_at.strftime("%d.%m.%Y %H:%M") %></p>
-        <p class="mb-0"><%= feedback.comment %></p>
-      </div>
-    </div>
-  <% end %>
+  <div class="stack">
+    <% @feedbacks.each do |feedback| %>
+      <article class="panel event-card">
+        <h2 class="event-card__title"><%= feedback.event.name %></h2>
+        <p class="rating" aria-label="<%= feedback.rating %> out of 5">
+          <%= "★" * feedback.rating %><%= "☆" * (5 - feedback.rating) %>
+        </p>
+        <p class="event-card__meta">
+          By <%= feedback.volunteer.name %> <%= feedback.volunteer.surname %> ·
+          <%= feedback.created_at.strftime("%d.%m.%Y %H:%M") %>
+        </p>
+        <p class="event-card__description"><%= feedback.comment %></p>
+      </article>
+    <% end %>
+  </div>
 <% end %>

@@ -1,34 +1,30 @@
-<h1 class="mb-4">My Profile</h1>
+<h1>My Profile</h1>
 
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <div class="mb-3">
-          <small class="text-muted d-block">Name</small>
-          <span class="fs-5"><%= @volunteer.name %> <%= @volunteer.surname %></span>
-        </div>
-
-        <div class="mb-3">
-          <small class="text-muted d-block">Email</small>
-          <span class="fs-5"><%= @volunteer.email_address %></span>
-        </div>
-
-        <div class="mb-3">
-          <small class="text-muted d-block">Skill</small>
-          <span class="badge bg-secondary"><%= @volunteer.skill %></span>
-        </div>
-
-        <div class="mb-3">
-          <small class="text-muted d-block">Interest</small>
-          <span class="badge bg-info text-dark"><%= @volunteer.interest %></span>
-        </div>
-
-        <hr>
-
-        <%= link_to "Edit Profile", edit_volunteers_registration_path, class: "btn btn-outline-primary btn-sm" %>
-        <%= link_to "My Points", volunteer_points_path, class: "btn btn-outline-primary btn-sm" %>
-      </div>
+<section class="panel panel--narrow">
+  <dl class="details">
+    <div>
+      <dt>Name</dt>
+      <dd><%= @volunteer.name %> <%= @volunteer.surname %></dd>
     </div>
+
+    <div>
+      <dt>Email</dt>
+      <dd><%= @volunteer.email_address %></dd>
+    </div>
+
+    <div>
+      <dt>Skill</dt>
+      <dd><span class="tag"><%= @volunteer.skill %></span></dd>
+    </div>
+
+    <div>
+      <dt>Interest</dt>
+      <dd><span class="tag tag--primary"><%= @volunteer.interest %></span></dd>
+    </div>
+  </dl>
+
+  <div class="panel__actions">
+    <%= link_to "Edit Profile", edit_volunteers_registration_path, class: "button button--secondary button--small" %>
+    <%= link_to "My Points", volunteer_points_path, class: "button button--secondary button--small" %>
   </div>
-</div>
+</section>

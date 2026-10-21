@@ -3,20 +3,6 @@
     --bs-primary-rgb: 76, 29, 149;
 }
 
-body {
-    font-family: "Source Serif 4", serif;
-    color: #2d2d2d;
-    line-height: 1.7;
-    font-size: 1.05rem;
-}
-
-h1, h2, h3, h4, h5, h6,
-.navbar-brand,
-.card-title {
-    font-family: "Playfair Display", serif;
-    font-weight: 700;
-}
-
 .btn-primary {
     background-color: #4c1d95;
     border-color: #4c1d95;
@@ -44,14 +30,7 @@ h1, h2, h3, h4, h5, h6,
 .bg-primary {
     background-color: #4c1d95 !important;
 }
-h1 {
-    color: #4c1d95;
-    display: inline-block;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 4px solid #4c1d95;
-    font-size: 2rem;
-}
+
 .card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border-radius: 12px;

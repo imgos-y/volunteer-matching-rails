@@ -1,65 +1,61 @@
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Edit Profile</h2>
+<section class="panel panel--narrow">
+  <h2 class="panel__title">Edit Profile</h2>
 
-        <%= form_with model: @volunteer, url: volunteers_registration_path do |f| %>
-          <%= render "shared/form_errors", record: @volunteer %>
+  <%= form_with model: @volunteer, url: volunteers_registration_path do |f| %>
+    <%= render "shared/form_errors", record: @volunteer %>
 
-          <div class="mb-3">
-            <%= f.label :name, class: "form-label" %>
-            <%= f.text_field :name, class: "form-control" %>
-          </div>
-
-          <div class="mb-3">
-            <%= f.label :surname, class: "form-label" %>
-            <%= f.text_field :surname, class: "form-control" %>
-          </div>
-
-          <div class="mb-3">
-            <%= f.label :skill, class: "form-label" %>
-            <%= f.select :skill, Volunteer::SKILLS, { prompt: "Select a skill" }, class: "form-select" %>
-          </div>
-
-          <div class="mb-3">
-            <%= f.label :interest, class: "form-label" %>
-            <%= f.select :interest, Volunteer::INTERESTS, { prompt: "Select an interest" }, class: "form-select" %>
-          </div>
-
-          <hr>
-
-          <%= f.fields_for :user do |uf| %>
-            <div class="mb-3">
-              <%= uf.label :email_address, "Email", class: "form-label" %>
-              <%= uf.email_field :email_address, autocomplete: "email", class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= uf.label :password, "New password", class: "form-label" %>
-              <small class="text-muted d-block mb-1">(leave blank if you don't want to change it)</small>
-              <%= uf.password_field :password, autocomplete: "new-password", maxlength: 72, class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= uf.label :password_confirmation, "Confirm new password", class: "form-label" %>
-              <%= uf.password_field :password_confirmation, autocomplete: "new-password", maxlength: 72, class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= uf.label :password_challenge, "Current password", class: "form-label" %>
-              <small class="text-muted d-block mb-1">(only needed to change your email or password)</small>
-              <%= uf.password_field :password_challenge, autocomplete: "current-password", class: "form-control" %>
-            </div>
-          <% end %>
-
-          <div class="d-grid">
-            <%= f.submit "Update", class: "btn btn-primary" %>
-          </div>
-        <% end %>
-
-        <%= link_to "Back to profile", volunteer_profile_path, class: "d-block mt-3" %>
-      </div>
+    <div class="field">
+      <%= f.label :name %>
+      <%= f.text_field :name, class: "input" %>
     </div>
+
+    <div class="field">
+      <%= f.label :surname %>
+      <%= f.text_field :surname, class: "input" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :skill %>
+      <%= f.select :skill, Volunteer::SKILLS, { prompt: "Select a skill" }, class: "input" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :interest %>
+      <%= f.select :interest, Volunteer::INTERESTS, { prompt: "Select an interest" }, class: "input" %>
+    </div>
+
+    <h3 class="form-section">Account</h3>
+
+    <%= f.fields_for :user do |uf| %>
+      <div class="field">
+        <%= uf.label :email_address, "Email" %>
+        <%= uf.email_field :email_address, autocomplete: "email", class: "input" %>
+      </div>
+
+      <div class="field">
+        <%= uf.label :password, "New password" %>
+        <p class="field__hint" id="password-hint">Leave blank if you don't want to change it.</p>
+        <%= uf.password_field :password, autocomplete: "new-password", maxlength: 72, class: "input",
+                              aria: { describedby: "password-hint" } %>
+      </div>
+
+      <div class="field">
+        <%= uf.label :password_confirmation, "Confirm new password" %>
+        <%= uf.password_field :password_confirmation, autocomplete: "new-password", maxlength: 72, class: "input" %>
+      </div>
+
+      <div class="field">
+        <%= uf.label :password_challenge, "Current password" %>
+        <p class="field__hint" id="password-challenge-hint">Only needed to change your email or password.</p>
+        <%= uf.password_field :password_challenge, autocomplete: "current-password", class: "input",
+                              aria: { describedby: "password-challenge-hint" } %>
+      </div>
+    <% end %>
+
+    <%= f.submit "Update", class: "button button--block" %>
+  <% end %>
+
+  <div class="panel__footer">
+    <%= link_to "Back to profile", volunteer_profile_path %>
   </div>
-</div>
+</section>

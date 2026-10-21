@@ -1,0 +1,22 @@
+@layer base {
+
+
+    body {
+        font-family: var(--font-sans);
+        font-size: var(--text-base);
+        line-height: 1.6;
+        color: var(--color-text);
+        background: var(--color-bg);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    h1 {
+        margin: 0 0 var(--space-6);
+        font-size: var(--text-2xl);
+        font-weight: 700;
+    }
+}

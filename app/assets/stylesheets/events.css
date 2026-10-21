@@ -1,0 +1,75 @@
+@layer component {
+
+
+    .event-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .event-card__title {
+        margin: 0;
+        font-size: var(--text-lg);
+    }
+
+    .event-card__description {
+        margin: 0;
+    }
+
+    .event-card__meta {
+        margin: 0;
+        font-size: var(--text-sm);
+        color: var(--color-text-muted);
+    }
+
+    .event-card__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    .event-card__actions {
+        margin-top: auto;
+    }
+
+    .event-card__note {
+        margin: 0;
+        font-size: var(--text-sm);
+        color: var(--color-success);
+    }
+
+    .rating {
+        margin: 0;
+        color: var(--color-primary);
+        letter-spacing: 2px;
+    }
+
+    .event-card__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: var(--space-3);
+    }
+
+    .progress {
+        width: 100%;
+        height: 8px;
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        background: var(--color-border);
+        overflow: hidden;
+    }
+
+    .progress::-webkit-progress-bar {
+        background: var(--color-border);
+    }
+
+    .progress::-webkit-progress-value {
+        background: var(--color-primary);
+    }
+
+    .progress::-moz-progress-bar {
+        background: var(--color-primary);
+    }
+}

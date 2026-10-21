@@ -1,0 +1,22 @@
+@layer component {
+    .panel.notification {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4);
+    }
+
+    .panel.notification--unread {
+        border-left: 3px solid var(--color-primary);
+    }
+
+    .notification__message {
+        margin: 0;
+    }
+
+    .notification__time {
+        font-size: var(--text-sm);
+        color: var(--color-text-muted);
+    }
+}

@@ -4,7 +4,6 @@ class NavbarsTest < ApplicationSystemTestCase
   driven_by :selenium, using: :headless_chrome, screen_size: [ 375, 800 ]
 
   test "mobile menu opens, closes, and keeps working after a Turbo visit" do
-
     visit root_path
     assert_no_link "Volunteer Sign In"
 

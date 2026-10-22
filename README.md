@@ -46,13 +46,13 @@ bin/dev
 
 All seed accounts use the password `password123`.
 
-| Role              | Email |
------------------------------------------
-| Organizer (TEMA)  | `john@example.com` |
+| Role | Email |
+|---|---|
+| Organizer (TEMA) | `john@example.com` |
 | Organizer (LOSEV) | `dostluk@example.com` |
-| Volunteer         | `aksoy@example.com` |
-| Volunteer         | `imge@example.com` |
-| Volunteer         | `deniz@example.com` |
+| Volunteer | `aksoy@example.com` |
+| Volunteer | `imge@example.com` |
+| Volunteer | `deniz@example.com` |
 
 ## Running the tests
 

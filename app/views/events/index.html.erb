@@ -1,6 +1,7 @@
 <h1>Events</h1>
 
-<%= form_with url: events_path, method: :get, class: "filter-bar" do |f| %>
+<%= form_with url: events_path, method: :get, class: "filter-bar",
+              data: {turbo_frame: "events", turbo_action: "advance" }  do |f| %>
   <div class="field">
     <%= f.label :from, "From" %>
     <%= f.date_field :from, value: @from, class: "input" %>
@@ -12,9 +13,11 @@
   </div>
 
   <%= f.submit "Filter", name: nil, class: "button" %>
-  <%= link_to "Clear", events_path, class: "button button--secondary" %>
+  <%= link_to "Clear", events_path, class: "button button--secondary",
+              data: {turbo_frame: "events", turbo_action: "advance"} %>
 <% end %>
 
+<%= turbo_frame_tag "events", target: "_top" do %>
 <% if @events.empty? %>
   <p class="empty-state">No events found.</p>
 <% end %>
@@ -57,3 +60,4 @@
     </article>
   <% end %>
 </div>
+<% end %>

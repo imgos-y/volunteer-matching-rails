@@ -36,12 +36,47 @@
         margin: 0;
         padding-left: var(--space-4);
     }
+
+    .toasts {
+        position: fixed;
+        right: var(--space-4);
+        bottom: var(--space-4);
+        z-index: 10;
+        display: grid;
+        gap: var(--space-2);
+        width: min(24rem, calc(100% - 2 * var(--space-4)));
+    }
+
+    .toasts .flash {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: var(--space-3);
+        margin: 0;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    }
+
+    .flash__close {
+        padding: 0;
+        font: inherit;
+        font-size: var(--text-lg);
+        line-height: 1;
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+
     .empty-state {
         padding: var(--space-8) var(--space-4);
         text-align: center;
         color: var(--color-text-muted);
         border: 1px dashed var(--color-border);
         border-radius: var(--radius);
+    }
+
+    .stack > .empty-state:not(:only-child) {
+        display: none;
     }
 
     .card-grid {

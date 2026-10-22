@@ -1,20 +1,6 @@
 <h1>Notifications</h1>
 
-<% if @notifications.empty? %>
+<div id="notifications" class="stack">
+  <%= render @notifications %>
   <p class="empty-state">No notifications yet.</p>
-<% else %>
-  <div class="stack">
-    <% @notifications.each do |notification| %>
-      <article class="panel notification <%= 'notification--unread' unless notification.read? %>">
-        <div>
-          <p class="notification__message"><%= notification.message %></p>
-          <span class="notification__time"><%= notification.created_at.strftime("%d.%m.%Y %H:%M") %></span>
-        </div>
-
-        <% unless notification.read? %>
-          <%= button_to "Mark as read", mark_as_read_notification_path(notification), method: :patch, class: "button button--secondary button--small" %>
-        <% end %>
-      </article>
-    <% end %>
-  </div>
-<% end %>
+</div>

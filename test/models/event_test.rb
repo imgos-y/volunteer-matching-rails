@@ -9,6 +9,20 @@ class EventTest < ActiveSupport::TestCase
     assert_equal 0, events(:concert).match_score_for(volunteer)
   end
 
+  test "skill_match? is true when the skill matches" do
+    volunteer = volunteers(:emir)
+
+    assert events(:cleanup).skill_match?(volunteer)
+    assert_not events(:workshop).skill_match?(volunteer)
+  end
+
+  test "interest_match? is true when the interest matches" do
+    volunteer = volunteers(:emir)
+
+    assert events(:workshop).interest_match?(volunteer)
+    assert_not events(:concert).interest_match?(volunteer)
+  end
+
   test "ordered_for_volunteer puts the best matches first" do
     volunteer = volunteers(:emir)
 

@@ -69,5 +69,8 @@ class EventRegistrationsController < ApplicationController
     else
       redirect_to organizer_dashboard_path, alert: "This registration has already been processed."
     end
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to organizer_dashboard_path, alert:
+      e.record.errors.full_messages.to_sentence
   end
 end

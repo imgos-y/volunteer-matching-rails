@@ -38,4 +38,18 @@ class VolunteerTest < ActiveSupport::TestCase
   test "fixture is valid" do
     assert volunteers(:emir).valid?
   end
+
+  test "squishes name and surname" do
+    volunteer = Volunteer.new(name: "  Ayşe   Nur ", surname: " Yılmaz  ")
+    assert_equal "Ayşe Nur", volunteer.name
+    assert_equal "Yılmaz", volunteer.surname
+  end
+
+  test "next_badge skips a badge the volunteer has just reached" do
+    volunteer = volunteers(:emir)
+    volunteer.points = 50
+
+    assert_equal badges(:gold), volunteer.next_badge
+    assert_equal 50, volunteer.points_to_next_badge
+  end
 end

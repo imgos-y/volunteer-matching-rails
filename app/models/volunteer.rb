@@ -18,6 +18,8 @@ class Volunteer < ApplicationRecord
   has_many :event_feedbacks, dependent: :destroy
   has_many :notifications, as: :recipient, dependent: :destroy
 
+  normalizes :name, :surname, with: ->(e) { e.squish }
+
   validates :name, :surname, presence: true
   validates :skill, inclusion: { in: SKILLS }
   validates :interest, inclusion: { in: INTERESTS }
@@ -30,6 +32,16 @@ class Volunteer < ApplicationRecord
   def deduct_points(amount)
     new_points = [ points - amount, 0 ].max
     update!(points: new_points)
+  end
+
+  def next_badge
+    Badge.where("required_points > ?", points).order(:required_points).first
+  end
+
+  def points_to_next_badge
+    return unless next_badge
+
+    next_badge.required_points - points
   end
 
   private

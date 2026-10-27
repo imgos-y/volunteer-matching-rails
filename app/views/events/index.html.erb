@@ -34,8 +34,14 @@
       </p>
 
       <div class="event-card__tags">
-        <% if current_volunteer && event.match_score_for(current_volunteer) == 2 %>
-          <span class="tag tag--success">Best Match</span>
+        <% if current_volunteer %>
+          <% if event.skill_match?(current_volunteer) && event.interest_match?(current_volunteer) %>
+            <span class="tag tag--success">Best Match</span>
+          <% elsif event.skill_match?(current_volunteer) %>
+            <span class="tag tag--success">Matches your skill</span>
+          <% elsif event.interest_match?(current_volunteer) %>
+            <span class="tag tag--success">Matches your interest</span>
+          <% end %>
         <% end %>
         <span class="tag"><%= event.skill_needed %></span>
         <span class="tag tag--primary"><%= event.interest_needed %></span>

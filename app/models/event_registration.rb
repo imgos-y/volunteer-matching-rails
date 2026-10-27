@@ -17,6 +17,7 @@ class EventRegistration < ApplicationRecord
   validate :event_open_for_registration, if: :becoming_active?
   validate :not_already_actively_registered, if: :becoming_active?
   validate :capacity_not_exceeded, if: :becoming_active?
+  validate :event_has_taken_place, if: :becoming_final?
 
   after_create_commit :notify_organizer_of_registration
   after_create_commit :notify_organizer_if_full
@@ -26,6 +27,10 @@ class EventRegistration < ApplicationRecord
 
   def becoming_active?
     status == "registered" && (new_record? || will_save_change_to_status?)
+  end
+
+  def becoming_final?
+    will_save_change_to_status? && status.in?(%w[attended no_show])
   end
 
   def valid_status_transition
@@ -45,6 +50,11 @@ class EventRegistration < ApplicationRecord
     elsif event.event_date.present? && event.event_date < Time.current
       errors.add(:base, "Event has already taken place")
     end
+  end
+
+  def event_has_taken_place
+    return unless event
+    errors.add(:base, "Attendance can only be confirmed after the event") unless event.past?
   end
 
   def capacity_not_exceeded

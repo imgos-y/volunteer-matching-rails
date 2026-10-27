@@ -13,12 +13,14 @@ class EventRegistrationsControllerTest < ActionDispatch::IntegrationTest
   test "confirming attendance twice awards points only once" do
     sign_in_as(users(:tema))
     event = events(:cleanup)
-    registration = event_registrations(:emir_cleanup)
+    travel_to 2.weeks.from_now do
+      registration = event_registrations(:emir_cleanup)
 
-    patch confirm_attendance_path(event, registration)
-    patch confirm_attendance_path(event, registration)
+      patch confirm_attendance_path(event, registration)
+      patch confirm_attendance_path(event, registration)
 
-    assert_equal 10, volunteers(:emir).reload.points
+      assert_equal 10, volunteers(:emir).reload.points
+      end
   end
 
   test "a signed out user cannot join an event " do
@@ -35,6 +37,17 @@ class EventRegistrationsControllerTest < ActionDispatch::IntegrationTest
     patch confirm_attendance_path(events(:cleanup), registration)
 
     assert_response :not_found
+    assert_equal "registered", registration.reload.status
+  end
+
+  test "attendance cannot be confirmed before the event" do
+    sign_in_as(users(:tema))
+    registration = event_registrations(:emir_cleanup)
+
+    patch confirm_attendance_path(events(:cleanup), registration)
+
+    assert_redirected_to organizer_dashboard_path
+    assert_equal "Attendance can only be confirmed after the event", flash[:alert]
     assert_equal "registered", registration.reload.status
   end
 end

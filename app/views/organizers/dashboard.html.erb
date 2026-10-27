@@ -50,11 +50,14 @@
                 <td><%= registration.volunteer.name %> <%= registration.volunteer.surname %></td>
                 <td><%= registration_status_tag(registration) %></td>
                 <td>
-                  <% if registration.status == "registered" %>
+                  <% if registration.status == "registered" && event.past? %>
                     <div class="data-table__actions">
                       <%= button_to "Confirm", confirm_attendance_path(event_id: event.id, id: registration.id), method: :patch, class: "button button--success button--small" %>
                       <%= button_to "No-Show", mark_no_show_path(event_id: event.id, id: registration.id), method: :patch, class: "button button--secondary button--small" %>
                     </div>
+                  <% elsif registration.status == "registered" %>
+                    <span class="event-card__meta">After the event</span>
+
                   <% end %>
                 </td>
               </tr>

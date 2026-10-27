@@ -34,12 +34,14 @@ class EventRegistrationTest < ActiveSupport::TestCase
 
   test "an attended registration cannot become a no-show" do
     registration = event_registrations(:emir_cleanup)
-    registration.update!(status: "attended")
+    travel_to 2.weeks.from_now do
+      registration.update!(status: "attended")
 
-    registration.status = "no_show"
+      registration.status = "no_show"
 
-    assert_not registration.valid?
-    assert_includes registration.errors[:status], "cannot change from attended to no_show"
+      assert_not registration.valid?
+      assert_includes registration.errors[:status], "cannot change from attended to no_show"
+      end
   end
 
   test "a cancelled registration can be registered again" do
@@ -54,6 +56,21 @@ class EventRegistrationTest < ActiveSupport::TestCase
   test "a new registration notifies the organizer" do
     assert_difference -> { organizers(:tema).notifications.count }, 1 do
       EventRegistration.create!(event: events(:workshop), volunteer: volunteers(:imge), status: "registered")
+    end
+  end
+
+  test "attendance cannot be confirmed before the event" do
+    registration = event_registrations(:emir_cleanup)
+    registration.status = "attended"
+    assert_not registration.valid?
+    assert_includes registration.errors[:base], "Attendance can only be confirmed after the event"
+  end
+
+  test "attendance can be confirmed after the event" do
+    registration = event_registrations(:emir_cleanup)
+    travel_to 2.weeks.from_now do
+      registration.status = "attended"
+      assert registration.valid?
     end
   end
 end

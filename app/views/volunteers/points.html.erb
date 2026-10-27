@@ -11,4 +11,14 @@
   <% else %>
     <p class="stat__label">No badge yet</p>
   <% end %>
+
+  <% next_badge = @volunteer.next_badge %>
+  <% if next_badge %>
+    <p class="stat__label">
+      <%= pluralize(@volunteer.points_to_next_badge, "point") %> to <%= next_badge.name %>
+    </p>
+    <progress class="progress" value="<%= @volunteer.points %>" max="<%= next_badge.required_points %>"></progress>
+  <% else %>
+    <p class="stat__label">You've earned every badge!</p>
+  <% end %>
 </section>

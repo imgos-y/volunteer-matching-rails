@@ -28,11 +28,17 @@ class Event < ApplicationRecord
     event_date < Time.current
   end
 
+  def skill_match?(volunteer)
+    skill_needed == volunteer.skill
+  end
+
+  def interest_match?(volunteer)
+    interest_needed == volunteer.interest
+  end
+
   def match_score_for(volunteer)
-    skill_match = skill_needed == volunteer.skill
-    interest_match = interest_needed == volunteer.interest
-    return 2 if skill_match && interest_match
-    return 1 if skill_match || interest_match
+    return 2 if skill_match?(volunteer) && interest_match?(volunteer)
+    return 1 if skill_match?(volunteer) || interest_match?(volunteer)
 
     0
   end

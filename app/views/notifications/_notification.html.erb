@@ -1,0 +1,10 @@
+<article id="<%= dom_id notification %>" class="panel notification <%= 'notification--unread' unless notification.read? %>">
+  <div>
+    <p class="notification__message"><%= notification.message %></p>
+    <span class="notification__time"><%= notification.created_at.strftime("%d.%m.%Y %H:%M") %></span>
+  </div>
+
+  <% unless notification.read? %>
+    <%= button_to "Mark as read", mark_as_read_notification_path(notification), method: :patch, class: "button button--secondary button--small" %>
+  <% end %>
+</article>

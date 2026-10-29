@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   allow_unauthenticated_access only: :index
-  before_action :require_organizer, only: %i[new create cancel]
+  before_action :require_organizer, only: %i[new create edit update cancel]
+  before_action :set_editable_event, only: %i[edit update]
 
   def index
     @from = parse_date(params[:from])
@@ -29,13 +30,31 @@ class EventsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @event.update(event_params)
+      redirect_to organizer_dashboard_path, notice: "Event updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def cancel
     event = current_organizer.events.find(params[:id])
-    event.cancel!
+    event.cancel!(cancellation_reason)
     redirect_to organizer_dashboard_path, notice: "Event cancelled."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to organizer_dashboard_path, alert: e.record.errors.full_messages.to_sentence
   end
 
   private
+
+  def set_editable_event
+    @event = current_organizer.events.find(params[:id])
+    redirect_to organizer_dashboard_path, alert: "This event can no longer be edited." unless @event.editable?
+  end
 
   def parse_date(value)
     Date.iso8601(value) if value.present?
@@ -45,5 +64,9 @@ class EventsController < ApplicationController
 
   def event_params
     params.require(:event).permit(:name, :description, :event_date, :capacity, :skill_needed, :interest_needed)
+  end
+
+  def cancellation_reason
+    params.expect(event: [ :cancellation_reason ])[:cancellation_reason]
   end
 end

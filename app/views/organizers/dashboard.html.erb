@@ -11,11 +11,11 @@
       <article class="panel event-card">
         <div class="event-card__header">
           <h2 class="event-card__title"><%= event.name %></h2>
-          <% unless event.cancelled? %>
-            <%= button_to "Cancel Event", cancel_event_path(event), method: :patch, class: "button button--danger button--small",
-                          data: { turbo_confirm: "Are you sure you want to cancel this event?" } %>
+          <% if event.editable? %>
+            <%= link_to "Edit", edit_event_path(event), class: "button button--secondary button--small" %>
           <% end %>
         </div>
+
 
         <p class="event-card__meta">
           <%= event.event_date.strftime("%d.%m.%Y") %> ·
@@ -30,6 +30,20 @@
           <span class="tag"><%= event.skill_needed %></span>
           <span class="tag tag--primary"><%= event.interest_needed %></span>
         </div>
+
+        <% unless event.cancelled? %>
+          <details>
+            <summary class="button button--danger button--small">Cancel Event</summary>
+            <%= form_with model: event, url: cancel_event_path(event), namespace: dom_id(event),
+                          data: { turbo_confirm: "Are you sure you want to cancel this event?" } do |f| %>
+              <div class="field">
+                <%= f.label :cancellation_reason, "Reason" %>
+                <%= f.text_field :cancellation_reason, class: "input", required: true, maxlength: 200 %>
+              </div>
+              <%= f.submit "Confirm Cancellation", class: "button button--danger button--small" %>
+            <% end %>
+          </details>
+        <% end %>
 
         <h3 class="form-section">Registered Volunteers</h3>
         <% registrations = event.event_registrations.where(status: %w[registered attended]) %>

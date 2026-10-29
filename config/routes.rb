@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resource :session, only: :destroy
   resources :passwords, param: :token
-  resources :events, only: [ :index, :new, :create ] do
+  resources :events, only: [ :index, :new, :create, :edit, :update ] do
     member do
       patch :cancel
     end

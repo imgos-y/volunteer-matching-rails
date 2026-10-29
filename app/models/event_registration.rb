@@ -22,6 +22,7 @@ class EventRegistration < ApplicationRecord
   after_create_commit :notify_organizer_of_registration
   after_create_commit :notify_organizer_if_full
   after_update_commit :notify_on_status_change, if: :saved_change_to_status?
+  after_create_commit :notify_volunteer_of_registration
 
   private
 
@@ -82,6 +83,14 @@ class EventRegistration < ApplicationRecord
     )
   end
 
+  def notify_volunteer_of_registration
+    Notification.create!(
+      recipient: volunteer,
+      message: "You registered for '#{event.name}'",
+      notification_type: "registration_confirmed"
+    )
+  end
+
   def notify_organizer_if_full
     return unless event.full?
 
@@ -97,6 +106,7 @@ class EventRegistration < ApplicationRecord
     when "registered"
       notify_organizer_of_registration
       notify_organizer_if_full
+      notify_volunteer_of_registration
     when "cancelled"
       Notification.create!(
         recipient: event.organizer,

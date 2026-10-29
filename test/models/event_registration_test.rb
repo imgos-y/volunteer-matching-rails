@@ -59,6 +59,12 @@ class EventRegistrationTest < ActiveSupport::TestCase
     end
   end
 
+  test "a new registration notifies the volunteer" do
+    assert_difference -> { volunteers(:imge).notifications.count }, 1 do
+      EventRegistration.create!(event: events(:workshop), volunteer: volunteers(:imge), status: "registered")
+    end
+  end
+
   test "attendance cannot be confirmed before the event" do
     registration = event_registrations(:emir_cleanup)
     registration.status = "attended"

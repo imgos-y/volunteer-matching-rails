@@ -14,6 +14,9 @@ class Event < ApplicationRecord
   # kapasite 0 olamaz
   validate :event_date_not_in_past, if: :will_save_change_to_event_date?
   # sadece tarih değişirken kontrol edilir, tarihi geçmiş etkinlik yine iptal edilebilir
+  validates :cancellation_reason, presence: true, length: { maximum: 200 }, if: :cancelled?
+  validate :capacity_not_below_registrations, if: :will_save_change_to_capacity?
+  after_update_commit :notify_volunteers_of_update, if: :details_changed?
 
   scope :upcoming, -> { where(cancelled: false).where("event_date >= ?", Time.current) }
 
@@ -24,8 +27,13 @@ class Event < ApplicationRecord
   def full?
     active_registration_count >= capacity
   end
+
   def past?
     event_date < Time.current
+  end
+
+  def editable?
+    !cancelled? && !past?
   end
 
   def skill_match?(volunteer)
@@ -47,16 +55,16 @@ class Event < ApplicationRecord
     relation.sort_by { |event| -event.match_score_for(volunteer) }
   end
 
-  def cancel!
+  def cancel!(reason)
     return if cancelled?
 
     transaction do
-      update!(cancelled: true)
+      update!(cancelled: true, cancellation_reason: reason)
 
       event_registrations.where(status: "registered").includes(:volunteer).each do |registration|
         Notification.create!(
           recipient: registration.volunteer,
-          message: "'#{name}' Has been cancelled by the organizer",
+          message: "'#{name}' Has been cancelled by the organizer. Reason: '#{cancellation_reason}'.",
           notification_type: "event_cancelled"
         )
       end
@@ -64,11 +72,32 @@ class Event < ApplicationRecord
       event_registrations.where(status: "registered").update_all(status: "cancelled", updated_at: Time.current)
     end
   end
+
   private
+
+  def details_changed?
+    saved_changes.keys.intersect?(%w[name description event_date])
+  end
+
+  def notify_volunteers_of_update
+    event_registrations.where(status: "registered").includes(:volunteer).each do |registration|
+      Notification.create!(
+        recipient: registration.volunteer,
+        message: "'#{name}' has been updated by the organizer. Please check the new details.",
+        notification_type: "event_updated"
+      )
+    end
+  end
 
   def event_date_not_in_past
     return if event_date.blank?
 
     errors.add(:event_date, "can't be in the past") if event_date < Time.current
+  end
+
+  def capacity_not_below_registrations
+    return if capacity.blank?
+
+    errors.add(:capacity, "can't be lower than the number of registered volunteers") if capacity < active_registration_count
   end
 end

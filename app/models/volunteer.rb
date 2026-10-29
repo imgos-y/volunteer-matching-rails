@@ -18,6 +18,8 @@ class Volunteer < ApplicationRecord
   has_many :event_feedbacks, dependent: :destroy
   has_many :notifications, as: :recipient, dependent: :destroy
 
+  after_update_commit :notify_badge_earned, if: :saved_change_to_badge_id?
+
   normalizes :name, :surname, with: ->(e) { e.squish }
 
   validates :name, :surname, presence: true
@@ -49,5 +51,13 @@ class Volunteer < ApplicationRecord
   def check_and_assign_badge
     eligible = Badge.where("required_points <= ?", points).order(required_points: :desc).first
     update(badge: eligible) if eligible && eligible != badge
+  end
+
+  def notify_badge_earned
+    Notification.create!(
+      recipient: self,
+      message: "You earned the '#{badge.name}' badge!",
+      notification_type: "badge_earned"
+    )
   end
 end

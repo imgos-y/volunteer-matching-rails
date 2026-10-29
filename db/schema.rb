@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_15_185724) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_211928) do
   create_table "badges", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -53,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_15_185724) do
     t.bigint "organizer_id", null: false
     t.string "skill_needed"
     t.datetime "updated_at", null: false
+    t.string "cancellation_reason"
     t.index ["organizer_id"], name: "index_events_on_organizer_id"
   end
 

@@ -52,4 +52,18 @@ class VolunteerTest < ActiveSupport::TestCase
     assert_equal badges(:gold), volunteer.next_badge
     assert_equal 50, volunteer.points_to_next_badge
   end
+
+  test "earning a badge notifies the volunteer" do
+    volunteer = volunteers(:emir)
+    assert_difference -> { volunteer.notifications.count }, 1 do
+      volunteer.award_points(10)
+    end
+  end
+
+  test "points without a new badge do not notify" do
+    volunteer = volunteers(:emir)
+    assert_no_difference -> { volunteer.notifications.count } do
+      volunteer.award_points(5)
+    end
+  end
 end

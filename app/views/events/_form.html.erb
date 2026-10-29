@@ -1,0 +1,35 @@
+<%= form_with model: event do |f| %>
+  <%= render "shared/form_errors", record: event %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: "input" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description, rows: 3, class: "input" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :event_date %>
+    <%= f.datetime_field :event_date, class: "input" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :capacity %>
+    <%= f.number_field :capacity, class: "input" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :skill_needed %>
+    <%= f.select :skill_needed, Volunteer::SKILLS, { prompt: "Select required skill" }, class: "input" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :interest_needed %>
+    <%= f.select :interest_needed, Volunteer::INTERESTS, { prompt: "Select required interest" }, class: "input" %>
+  </div>
+
+  <%= f.submit class: "button button--block" %>
+<% end %>

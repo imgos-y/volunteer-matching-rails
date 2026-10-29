@@ -50,6 +50,7 @@ class EventTest < ActiveSupport::TestCase
   test "a past event can still be updated" do
     event = events(:past_cleanup)
     event.cancelled = true
+    event.cancellation_reason = "Venue unavailable"
 
     assert event.valid?
   end
@@ -67,10 +68,33 @@ class EventTest < ActiveSupport::TestCase
     registration = event_registrations(:emir_cleanup)
 
     assert_difference -> { volunteers(:emir).notifications.count }, 1 do
-      event.cancel!
+      event.cancel!("Storm warning")
     end
+    assert_equal "Storm warning", event.reload.cancellation_reason
+    assert_includes volunteers(:emir).notifications.last.message, "Storm warning"
 
     assert event.reload.cancelled?
     assert_equal "cancelled", registration.reload.status
+  end
+
+  test "cancel requires a reason" do
+    event = events(:cleanup)
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      event.cancel!("")
+    end
+    assert_not event.reload.cancelled?
+  end
+
+  test "capacity cannot drop below active registrations" do
+    event = events(:cleanup)
+    EventRegistration.create!(event: event, volunteer: volunteers(:imge), status: "registered")
+    event.capacity = 1
+
+    assert_not event.valid?
+    assert_includes event.errors[:capacity], "can't be lower than the number of registered volunteers"
+
+    event.capacity = 2
+    assert event.valid?
   end
 end

@@ -43,3 +43,4 @@ cancelled_meetup:
   skill_needed: Cooking
   interest_needed: Health
   cancelled: true
+  cancellation_reason: Not enough volunteers

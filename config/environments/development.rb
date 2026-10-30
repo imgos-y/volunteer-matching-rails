@@ -44,6 +44,10 @@ Rails.application.configure do
     authentication: :plain,
     enable_starttls: true
   }
+  # use Solid Queue instead of the in memory :async adapter
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to= { database: { writing: :queue } }
+
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false

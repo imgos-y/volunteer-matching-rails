@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_211928) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_30_083614) do
   create_table "badges", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -37,6 +37,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_211928) do
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "volunteer_id", null: false
+    t.datetime "reminder_sent_at"
     t.index ["event_id", "volunteer_id"], name: "index_event_registrations_on_event_id_and_volunteer_id", unique: true
     t.index ["event_id"], name: "index_event_registrations_on_event_id"
     t.index ["volunteer_id"], name: "index_event_registrations_on_volunteer_id"

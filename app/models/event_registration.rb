@@ -19,10 +19,28 @@ class EventRegistration < ApplicationRecord
   validate :capacity_not_exceeded, if: :becoming_active?
   validate :event_has_taken_place, if: :becoming_final?
 
+  # callbacks
   after_create_commit :notify_organizer_of_registration
   after_create_commit :notify_organizer_if_full
   after_update_commit :notify_on_status_change, if: :saved_change_to_status?
   after_create_commit :notify_volunteer_of_registration
+
+  scope :due_for_reminder, -> {
+    joins(:event)
+      .where(status: "registered", reminder_sent_at: nil)
+      .where(events: { cancelled: false, event_date: Time.current..24.hours.from_now })
+  }
+
+  def send_reminder!
+    transaction do
+      Notification.create!(
+        recipient: volunteer,
+        message: "Reminder: '#{event.name}' starts on #{event.event_date.strftime('%d.%m.%Y %H:%M')}",
+        notification_type: "event_reminder"
+      )
+      update!(reminder_sent_at: Time.current)
+    end
+  end
 
   private
 

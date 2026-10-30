@@ -8,6 +8,7 @@ class PasswordsController < ApplicationController
 
   def create
     if user = User.find_by(email_address: params[:email_address])
+      # deliver_now değil çünkü SMTP yavaş çalışır kullanıcı deneyimi açısından bunu arkaplanda işi sıraya koyar
       PasswordsMailer.reset(user).deliver_later
     end
 

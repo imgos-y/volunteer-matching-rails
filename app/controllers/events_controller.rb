@@ -63,7 +63,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:name, :description, :event_date, :capacity, :skill_needed, :interest_needed)
+    params.expect(event: [ :name, :description, :event_date, :capacity, :skill_needed, :interest_needed ])
   end
 
   def cancellation_reason

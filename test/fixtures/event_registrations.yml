@@ -4,4 +4,11 @@ emir_cleanup:
   status: registered
   registered_at: <%= 1.day.ago %>
 
+emir_past_cleanup:
+  event: past_cleanup
+  volunteer: emir
+  status: attended
+  registered_at: <%= 2.months.ago %>
+
+
 

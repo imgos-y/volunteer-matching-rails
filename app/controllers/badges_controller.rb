@@ -22,6 +22,6 @@ class BadgesController < ApplicationController
   private
 
   def badge_params
-    params.require(:badge).permit(:name, :required_points, :required_event)
+    params.expect(badge: [ :name, :required_points, :required_event ])
   end
 end

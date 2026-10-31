@@ -31,7 +31,7 @@
           <% else %>
             <h3 class="form-section">Leave Feedback</h3>
 
-            <%= form_for EventFeedback.new, url: event_event_feedbacks_path(registration.event) do |f| %>
+            <%= form_with model: EventFeedback.new, url: event_event_feedbacks_path(registration.event), namespace: dom_id(registration) do |f| %>
               <div class="field">
                 <%= f.label :rating %>
                 <%= f.select :rating, (1..5), {}, class: "input" %>

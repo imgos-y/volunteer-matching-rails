@@ -1,7 +1,7 @@
 <section class="panel panel--narrow">
   <h2 class="panel__title">Create Badge</h2>
 
-  <%= form_for @badge do |f| %>
+  <%= form_with model:  @badge do |f| %>
     <%= render "shared/form_errors", record: @badge %>
 
     <div class="field">

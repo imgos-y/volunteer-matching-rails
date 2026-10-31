@@ -15,6 +15,6 @@ class EventFeedbacksController < ApplicationController
   private
 
   def feedback_params
-    params.require(:event_feedback).permit(:rating, :comment)
+    params.expect(event_feedback: [ :rating, :comment ])
   end
 end

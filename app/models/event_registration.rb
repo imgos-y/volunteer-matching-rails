@@ -1,5 +1,5 @@
 class EventRegistration < ApplicationRecord
-  belongs_to :event
+  belongs_to :event, touch: true
   belongs_to :volunteer
 
   STATUSES = %w[registered attended cancelled no_show].freeze

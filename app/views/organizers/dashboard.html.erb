@@ -2,84 +2,88 @@
   <h1>My Dashboard</h1>
   <%= link_to "Create New Event", new_event_path, class: "button" %>
 </div>
+
 <%= render "stats", organizer: current_organizer, events: @events %>
+
 <% if @events.empty? %>
   <p class="empty-state">You haven't created any events yet.</p>
 <% else %>
   <div class="stack">
     <% @events.each do |event| %>
-      <article class="panel event-card">
-        <div class="event-card__header">
-          <h2 class="event-card__title"><%= event.name %></h2>
-          <% if event.editable? %>
-            <%= link_to "Edit", edit_event_path(event), class: "button button--secondary button--small" %>
-          <% end %>
-        </div>
-
-
-        <p class="event-card__meta">
-          <%= event.event_date.strftime("%d.%m.%Y") %> ·
-          <%= event.active_registration_count %> / <%= event.capacity %> registered
-        </p>
-        <progress class="progress" value="<%= event.active_registration_count %>" max="<%= event.capacity %>"></progress>
-
-        <div class="event-card__tags">
-          <% if event.cancelled? %>
-            <span class="tag tag--danger">Cancelled</span>
-          <% end %>
-          <span class="tag"><%= event.skill_needed %></span>
-          <span class="tag tag--primary"><%= event.interest_needed %></span>
-        </div>
-
-        <% unless event.cancelled? %>
-          <details>
-            <summary class="button button--danger button--small">Cancel Event</summary>
-            <%= form_with model: event, url: cancel_event_path(event), namespace: dom_id(event),
-                          data: { turbo_confirm: "Are you sure you want to cancel this event?" } do |f| %>
-              <div class="field">
-                <%= f.label :cancellation_reason, "Reason" %>
-                <%= f.text_field :cancellation_reason, class: "input", required: true, maxlength: 200 %>
-              </div>
-              <%= f.submit "Confirm Cancellation", class: "button button--danger button--small" %>
+      <% cache [event, event.past?] do %>
+        <article class="panel event-card">
+          <div class="event-card__header">
+            <h2 class="event-card__title"><%= event.name %></h2>
+            <% if event.editable? %>
+              <%= link_to "Edit", edit_event_path(event), class: "button button--secondary button--small" %>
             <% end %>
-          </details>
-        <% end %>
+          </div>
 
-        <h3 class="form-section">Registered Volunteers</h3>
-        <% registrations = event.active_registrations %>
-        <% if registrations.empty? %>
-          <p class="event-card__meta">No volunteers registered yet.</p>
-        <% else %>
-          <table class="data-table">
-            <thead>
-            <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th><span class="visually-hidden">Actions</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% registrations.each do |registration| %>
+
+          <p class="event-card__meta">
+            <%= event.event_date.strftime("%d.%m.%Y") %> ·
+            <%= event.active_registration_count %> / <%= event.capacity %> registered
+          </p>
+          <progress class="progress" value="<%= event.active_registration_count %>" max="<%= event.capacity %>"></progress>
+
+          <div class="event-card__tags">
+            <% if event.cancelled? %>
+              <span class="tag tag--danger">Cancelled</span>
+            <% end %>
+            <span class="tag"><%= event.skill_needed %></span>
+            <span class="tag tag--primary"><%= event.interest_needed %></span>
+          </div>
+
+          <% unless event.cancelled? %>
+            <details>
+              <summary class="button button--danger button--small">Cancel Event</summary>
+              <%= form_with model: event, url: cancel_event_path(event), namespace: dom_id(event),
+                            data: { turbo_confirm: "Are you sure you want to cancel this event?" } do |f| %>
+                <div class="field">
+                  <%= f.label :cancellation_reason, "Reason" %>
+                  <%= f.text_field :cancellation_reason, class: "input", required: true, maxlength: 200 %>
+                </div>
+                <%= f.submit "Confirm Cancellation", class: "button button--danger button--small" %>
+              <% end %>
+            </details>
+          <% end %>
+
+          <h3 class="form-section">Registered Volunteers</h3>
+          <% registrations = event.active_registrations %>
+          <% if registrations.empty? %>
+            <p class="event-card__meta">No volunteers registered yet.</p>
+          <% else %>
+            <table class="data-table">
+              <thead>
               <tr>
-                <td><%= registration.volunteer.name %> <%= registration.volunteer.surname %></td>
-                <td><%= registration_status_tag(registration) %></td>
-                <td>
-                  <% if registration.status == "registered" && event.past? %>
-                    <div class="data-table__actions">
-                      <%= button_to "Confirm", confirm_attendance_path(event_id: event.id, id: registration.id), method: :patch, class: "button button--success button--small" %>
-                      <%= button_to "No-Show", mark_no_show_path(event_id: event.id, id: registration.id), method: :patch, class: "button button--secondary button--small" %>
-                    </div>
-                  <% elsif registration.status == "registered" %>
-                    <span class="event-card__meta">After the event</span>
-
-                  <% end %>
-                </td>
+                <th>Name</th>
+                <th>Status</th>
+                <th><span class="visually-hidden">Actions</span></th>
               </tr>
-            <% end %>
-            </tbody>
-          </table>
-        <% end %>
-      </article>
+              </thead>
+              <tbody>
+              <% registrations.each do |registration| %>
+                <tr>
+                  <td><%= registration.volunteer.name %> <%= registration.volunteer.surname %></td>
+                  <td><%= registration_status_tag(registration) %></td>
+                  <td>
+                    <% if registration.status == "registered" && event.past? %>
+                      <div class="data-table__actions">
+                        <%= button_to "Confirm", confirm_attendance_path(event_id: event.id, id: registration.id), method: :patch, class: "button button--success button--small" %>
+                        <%= button_to "No-Show", mark_no_show_path(event_id: event.id, id: registration.id), method: :patch, class: "button button--secondary button--small" %>
+                      </div>
+                    <% elsif registration.status == "registered" %>
+                      <span class="event-card__meta">After the event</span>
+
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          <% end %>
+        </article>
+      <% end %>
+      </div>
     <% end %>
-  </div>
 <% end %>

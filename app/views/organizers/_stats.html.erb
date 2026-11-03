@@ -1,0 +1,16 @@
+<div class="card-grid">
+  <section class="panel stat">
+    <p class="stat__value"><%= events.sum(&:active_registration_count) %></p>
+    <p class="stat__label">active registrations</p>
+  </section>
+
+  <section class="panel stat">
+    <p class="stat__value"><%= number_to_percentage(organizer.attendance_rate, precision: 0) || "—" %></p>
+    <p class="stat__label">attendance rate</p>
+  </section>
+
+  <section class="panel stat">
+    <p class="stat__value"><%= number_with_precision(organizer.average_rating, precision: 1) || "—" %></p>
+    <p class="stat__label">average rating</p>
+  </section>
+</div>

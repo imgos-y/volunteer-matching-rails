@@ -10,5 +10,12 @@ emir_past_cleanup:
   status: attended
   registered_at: <%= 2.months.ago %>
 
+imge_past_cleanup:
+  event: past_cleanup
+  volunteer: imge
+  status: no_show
+  registered_at: <%= 2.months.ago %>
+
+
 
 

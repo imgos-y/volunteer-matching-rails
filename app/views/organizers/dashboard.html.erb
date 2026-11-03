@@ -2,7 +2,7 @@
   <h1>My Dashboard</h1>
   <%= link_to "Create New Event", new_event_path, class: "button" %>
 </div>
-
+<%= render "stats", organizer: current_organizer, events: @events %>
 <% if @events.empty? %>
   <p class="empty-state">You haven't created any events yet.</p>
 <% else %>

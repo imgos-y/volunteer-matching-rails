@@ -2,6 +2,8 @@ class Event < ApplicationRecord
   belongs_to :organizer
 
   has_many :event_registrations, dependent: :destroy
+  has_many :active_registrations, -> { where(status: EventRegistration::ACTIVE_STATUSES) },
+           class_name: "EventRegistration"
   has_many :volunteers, through: :event_registrations
   has_many :event_feedbacks, dependent: :destroy
   # many to many ilişkisi
@@ -21,7 +23,7 @@ class Event < ApplicationRecord
   scope :upcoming, -> { where(cancelled: false).where("event_date >= ?", Time.current) }
 
   def active_registration_count
-    event_registrations.where(status: %w[registered attended]).count
+    active_registrations.size
   end
 
   def full?

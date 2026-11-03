@@ -97,4 +97,15 @@ class EventTest < ActiveSupport::TestCase
     event.capacity = 2
     assert event.valid?
   end
+
+  test "preloaded active registrations need no extra queries" do
+    event = Event.includes(active_registrations: :volunteer).find(events(:cleanup).id)
+
+    assert_no_queries do
+      event.active_registration_count
+      event.active_registrations.each do |registration|
+        registration.volunteer.name
+      end
+    end
+  end
 end

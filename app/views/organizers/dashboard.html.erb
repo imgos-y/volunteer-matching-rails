@@ -46,7 +46,7 @@
         <% end %>
 
         <h3 class="form-section">Registered Volunteers</h3>
-        <% registrations = event.event_registrations.where(status: %w[registered attended]) %>
+        <% registrations = event.active_registrations %>
         <% if registrations.empty? %>
           <p class="event-card__meta">No volunteers registered yet.</p>
         <% else %>

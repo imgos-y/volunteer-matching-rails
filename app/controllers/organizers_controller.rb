@@ -6,7 +6,7 @@ class OrganizersController < ApplicationController
   end
 
   def dashboard
-    @events = current_organizer.events.order(event_date: :asc)
+    @events = current_organizer.events.includes(active_registrations: :volunteer).order(event_date: :asc)
   end
 
   def feedbacks

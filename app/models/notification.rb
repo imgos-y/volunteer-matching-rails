@@ -1,5 +1,6 @@
 class Notification < ApplicationRecord
   belongs_to :recipient, polymorphic: true
+  belongs_to :event, optional: true
   # polymorphic birden fazla referansı destekler
   # recipient_id → hangi kaydın ID'si olduğu (örneğin volunteer'ın id'si)
   # recipient_type → hangi tabloya ait olduğu ("Volunteer" veya "Organizer" string'i olarak)
@@ -14,6 +15,7 @@ class Notification < ApplicationRecord
                if: :unread_count_changed?
 
   after_create_commit :broadcast_to_list
+
   private
 
   def broadcast_to_list

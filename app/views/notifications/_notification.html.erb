@@ -2,6 +2,9 @@
   <div>
     <p class="notification__message"><%= notification.message %></p>
     <span class="notification__time"><%= notification.created_at.strftime("%d.%m.%Y %H:%M") %></span>
+    <% if notification.notification_type == "chat" && notification.event %>
+      <%= link_to "Open chat", event_messages_path(notification.event), class: "button button--secondary button--small" %>
+    <% end %>
   </div>
 
   <% unless notification.read? %>

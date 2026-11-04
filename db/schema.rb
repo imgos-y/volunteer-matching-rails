@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_30_083614) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_04_141409) do
   create_table "badges", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -58,6 +58,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_083614) do
     t.index ["organizer_id"], name: "index_events_on_organizer_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "user_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_messages_on_event_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message"
@@ -66,6 +76,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_083614) do
     t.bigint "recipient_id", null: false
     t.string "recipient_type", null: false
     t.datetime "updated_at", null: false
+    t.integer "event_id"
+    t.index ["event_id"], name: "index_notifications_on_event_id"
     t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
@@ -112,6 +124,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_083614) do
   add_foreign_key "event_registrations", "events"
   add_foreign_key "event_registrations", "volunteers"
   add_foreign_key "events", "organizers"
+  add_foreign_key "messages", "events"
+  add_foreign_key "messages", "users"
+  add_foreign_key "notifications", "events"
   add_foreign_key "sessions", "users"
   add_foreign_key "volunteers", "badges"
 end

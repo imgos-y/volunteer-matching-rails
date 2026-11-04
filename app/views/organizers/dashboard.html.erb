@@ -17,6 +17,7 @@
             <% if event.editable? %>
               <%= link_to "Edit", edit_event_path(event), class: "button button--secondary button--small" %>
             <% end %>
+            <%= link_to "Chat", event_messages_path(event), class: "button button--secondary button--small" %>
           </div>
 
 

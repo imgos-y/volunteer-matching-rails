@@ -14,6 +14,9 @@
         <div class="event-card__tags">
           <%= registration_status_tag(registration) %>
         </div>
+        <% if registration.status.in?(EventRegistration::ACTIVE_STATUSES) %>
+          <%= link_to "Chat", event_messages_path(registration.event), class: "button button--secondary button--small" %>
+        <% end %>
 
         <% if registration.status == "registered" %>
           <% if registration.event.past? %>

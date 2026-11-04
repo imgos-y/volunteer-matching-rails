@@ -40,7 +40,7 @@
     .toasts {
         position: fixed;
         right: var(--space-4);
-        bottom: var(--space-4);
+        bottom: calc(var(--space-4) + 4.5rem);
         z-index: 10;
         display: grid;
         gap: var(--space-2);

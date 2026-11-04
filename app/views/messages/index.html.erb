@@ -1,0 +1,23 @@
+<%= turbo_stream_from @event, :messages %>
+<div class="page-header">
+  <h1><%= @event.name %> — Chat</h1>
+</div>
+
+<section class="panel stack" id="messages">
+  <% if @messages.empty? %>
+    <p class="empty-state">No messages yet. Say hello!</p>
+  <% else %>
+    <%= render @messages %>
+  <% end %>
+</section>
+
+<section class="panel">
+  <%= form_with model: [@event, @message] do |f| %>
+    <%= render "shared/form_errors", record: @message %>
+    <div class="field">
+      <%= f.label :body, "Message" %>
+      <%= f.text_area :body, rows: 3, class: "input", required: true, maxlength: 1000 %>
+    </div>
+    <%= f.submit "Send", class: "button" %>
+  <% end %>
+</section>

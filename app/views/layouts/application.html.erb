@@ -88,6 +88,7 @@
 <main class="page">
   <%= yield %>
 </main>
+<%= render "layouts/chat_launcher", events: current_user.userable.chat_events if current_user %>
 
 <footer class="site-footer">
   &copy; <%= Date.current.year %> Volunteer Match — Ruby on Rails Internship Project

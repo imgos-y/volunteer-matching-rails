@@ -108,4 +108,22 @@ class EventTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "chat participants are the organizer and actively registered volunteers" do
+    assert events(:cleanup).chat_participant?(users(:tema))
+    assert events(:cleanup).chat_participant?(users(:emir))
+    assert events(:past_cleanup).chat_participant?(users(:emir))
+  end
+
+  test "others are not chat participants" do
+    assert_not events(:cleanup).chat_participant?(users(:losev))
+    assert_not events(:cleanup).chat_participant?(users(:imge))
+    assert_not events(:past_cleanup).chat_participant?(users(:imge))
+  end
+
+  test "cancelling a registration removes chat access" do
+    event_registrations(:emir_cleanup).update!(status: "cancelled")
+
+    assert_not events(:cleanup).chat_participant?(users(:emir))
+  end
 end

@@ -1,0 +1,16 @@
+<details class="chat-launcher">
+  <summary class="chat-launcher__button" aria-label="Open chats">💬</summary>
+
+  <div class="panel chat-launcher__panel">
+    <h2 class="chat-launcher__title">Chats</h2>
+    <% if events.empty? %>
+      <p class="event-card__meta">No chats yet.</p>
+    <% else %>
+      <ul class="chat-launcher__list">
+        <% events.each do |event| %>
+          <li><%= link_to event.name, event_messages_path(event) %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</details>

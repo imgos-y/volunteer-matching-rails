@@ -1,6 +1,6 @@
 class NotificationsController < ApplicationController
   def index
-    @notifications = current_recipient.notifications.order(created_at: :desc)
+    @notifications = current_recipient.notifications.includes(:event).recent_first
   end
 
   def mark_as_read

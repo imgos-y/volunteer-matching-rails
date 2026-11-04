@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
     resource :event_registration, only: [ :create ], controller: "event_registrations"
     resources :event_feedbacks, only: [ :create ]
+    resources :messages, only: %i[index create destroy]
   end
 
   resources :notifications, only: [ :index ] do

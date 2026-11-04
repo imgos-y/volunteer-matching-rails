@@ -22,4 +22,8 @@ class Organizer < ApplicationRecord
   def average_rating
     event_feedbacks.average(:rating)
   end
+
+  def chat_events
+    events.order(event_date: :desc)
+  end
 end

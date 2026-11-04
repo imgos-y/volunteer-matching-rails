@@ -6,6 +6,8 @@ class Event < ApplicationRecord
            class_name: "EventRegistration"
   has_many :volunteers, through: :event_registrations
   has_many :event_feedbacks, dependent: :destroy
+  has_many :messages, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   # many to many ilişkisi
 
   validates :name, :description, :event_date, :capacity, :skill_needed, :interest_needed, presence: true
@@ -36,6 +38,14 @@ class Event < ApplicationRecord
 
   def editable?
     !cancelled? && !past?
+  end
+
+  def chat_participant?(user)
+    if user.organizer?
+      organizer == user.userable
+    else
+      active_registrations.exists?(volunteer: user.userable)
+    end
   end
 
   def skill_match?(volunteer)

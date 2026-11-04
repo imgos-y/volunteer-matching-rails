@@ -46,6 +46,10 @@ class Volunteer < ApplicationRecord
     next_badge.required_points - points
   end
 
+  def chat_events
+    events.where(event_registrations: { status: EventRegistration::ACTIVE_STATUSES }).order(event_date: :desc)
+  end
+
   private
 
   def check_and_assign_badge

@@ -1,0 +1,15 @@
+<article class="message">
+  <p class="event-card__meta">
+    <strong><%= message.user.userable.name %></strong>
+    <% if message.user.organizer? %>
+      <span class="tag tag--primary">Organizer</span>
+    <% end %>
+    · <%= message.created_at.strftime("%d.%m.%Y %H:%M") %>
+  </p>
+  <%= simple_format(message.body) %>
+  <% if message.deletable_by?(current_user) %>
+    <%= button_to "Delete", event_message_path(message.event, message), method: :delete,
+                  class: "button button--danger button--small",
+                  data: { turbo_confirm: "Delete this message?" } %>
+  <% end %>
+</article>
